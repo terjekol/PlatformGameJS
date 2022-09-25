@@ -3,5 +3,4 @@ function handleKey(isKeyUp, key, gameModel){
     const keys = gameModel.keys;
     if(isKeyUp) keys.add(key);
     else keys.delete(key);
-    console.log(isKeyUp, key, gameModel.keys)
 }

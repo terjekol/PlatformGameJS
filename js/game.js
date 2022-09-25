@@ -1,15 +1,50 @@
 function runGame() {
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
-    canvas.width = 800;
-    canvas.height = 720;
     const gameModel = initGameModel();
+    canvas.width = gameModel.game.width;
+    canvas.height = gameModel.game.height;
     window.addEventListener('keydown', e => handleKey(true, e.key, gameModel));
     window.addEventListener('keyup', e => handleKey(false, e.key, gameModel));
+
+    drawPlayer(ctx, gameModel);
+    const animate = () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        updatePlayer(gameModel);
+        drawPlayer(ctx, gameModel);
+        requestAnimationFrame(animate);
+    };
+    animate();
 }
 
 function initGameModel() {
-    return {
+    const gameModel = {
         keys: new Set(),
+        game: {
+            width: 800,
+            height: 720,
+        },
+        player: {
+            x: 0,
+            // y: 0,
+            width: 200,
+            height: 200,
+            speedX: 0,
+            speedY: 0,
+            downForce: 1,
+            frameCol: 0,
+            frameRow: 0,
+        },
+        images: {
+            player: getImage('player'),
+            enemy: getImage('enemy'),
+            background: getImage('background'),
+        },
     };
+    gameModel.player.y = gameModel.game.height - gameModel.player.height;
+    return gameModel;
+}
+
+function getImage(name){
+    return document.getElementById(name + 'Img');
 }
