@@ -23,6 +23,7 @@ function initGameModel() {
         game: {
             width: 800,
             height: 720,
+            spriteAnimationSkip: 3,
         },
         player: {
             x: 0,
@@ -32,8 +33,9 @@ function initGameModel() {
             speedX: 0,
             speedY: 0,
             downForce: 1,
-            frameCol: 0,
-            frameRow: 0,
+            spriteIndex: 0,
+            state: 0,
+            spriteCounts: [7, 9],
         },
         images: {
             player: getImage('player'),

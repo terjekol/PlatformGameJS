@@ -5,6 +5,7 @@ function drawPlayer(ctx, gameModel) {
 function updatePlayer(gameModel) {
     updateHorizontalMovement(gameModel);
     updateVerticalMovement(gameModel);
+    updateSprite(gameModel);
     setSpeed(gameModel);
 }
 
@@ -25,17 +26,28 @@ function updateHorizontalMovement(gameModel) {
 }
 
 function updateVerticalMovement(gameModel) {
-    const newY = gameModel.player.y + gameModel.player.speedY;
-    const maxY = gameModel.game.height - gameModel.player.height;
-    const y = gameModel.player.y = clamp(newY, 0, maxY);
-
-    if (isOnGround(gameModel)) {
-        gameModel.player.speedY = 0;
-    } else {
-        gameModel.player.speedY += gameModel.player.downForce;
-    }
+    const player = gameModel.player;
+    const newY = player.y + player.speedY;
+    const maxY = gameModel.game.height - player.height;
+    player.y = clamp(newY, 0, maxY);
+    const playerIsOnGround = isOnGround(gameModel);
+    player.speedY = playerIsOnGround ? 0 : player.speedY + player.downForce;
 }
 
-function isOnGround(gameModel){
+function updateSprite(gameModel) {
+    const player = gameModel.player;
+    if (!player.spriteSkipIndex) {
+        player.spriteSkipIndex = gameModel.game.spriteAnimationSkip;
+    } else {
+        player.spriteSkipIndex--;
+        return;
+    }
+    const spriteCount = player.spriteCounts[player.state];
+    player.spriteIndex = (player.spriteIndex + 1) % spriteCount;
+
+}
+
+function isOnGround(gameModel) {
     return gameModel.player.y >= gameModel.game.height - gameModel.player.height;
 }
+

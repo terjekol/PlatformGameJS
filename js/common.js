@@ -3,9 +3,9 @@ function clamp(value, min, max) {
 };
 
 function drawSpriteFrame(ctx, image, objectModel) {
-    const { x, y, width, height, frameCol, frameRow } = objectModel;
-    const frameY = frameRow * height;
-    const frameX = frameCol * width;
+    const { x, y, width, height, spriteIndex, state } = objectModel;
+    const frameY = state * height;
+    const frameX = spriteIndex * width;
 
     ctx.drawImage(image, frameX, frameY,
         width, height, x, y,
