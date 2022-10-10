@@ -11,3 +11,15 @@ function drawSpriteFrame(ctx, image, objectModel) {
         width, height, x, y,
         width, height);
 }
+
+
+function updateSprite(gameModel, gameObject) {
+    if (!gameObject.spriteSkipIndex) {
+        gameObject.spriteSkipIndex = gameModel.game.spriteAnimationSkip;
+    } else {
+        gameObject.spriteSkipIndex--;
+        return;
+    }
+    const spriteCount = gameObject.spriteCounts[gameObject.state];
+    gameObject.spriteIndex = (gameObject.spriteIndex + 1) % spriteCount;
+}

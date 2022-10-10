@@ -11,6 +11,8 @@ function runGame() {
     const animate = () => {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         updatePlayer(gameModel);
+        updateEnemy(gameModel);
+        drawEnemy(ctx, gameModel);
         drawPlayer(ctx, gameModel);
         requestAnimationFrame(animate);
     };
@@ -37,6 +39,17 @@ function initGameModel() {
             state: 0,
             spriteCounts: [7, 9],
         },
+        enemy: {
+            x: 0,
+            // y: 0,
+            width: 229,
+            height: 171,
+            speedX: -1,
+            speedY: 0,
+            spriteIndex: 0,
+            state: 0,
+            spriteCounts: [6],
+        },
         images: {
             player: getImage('player'),
             enemy: getImage('enemy'),
@@ -44,9 +57,11 @@ function initGameModel() {
         },
     };
     gameModel.player.y = gameModel.game.height - gameModel.player.height;
+    gameModel.enemy.y = gameModel.game.height - gameModel.enemy.height;
+    gameModel.enemy.x = gameModel.game.width;
     return gameModel;
 }
 
-function getImage(name){
+function getImage(name) {
     return document.getElementById(name + 'Img');
 }
