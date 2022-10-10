@@ -42,8 +42,8 @@ function initGameModel() {
         enemy: {
             x: 0,
             // y: 0,
-            width: 229,
-            height: 171,
+            width: 160,
+            height: 119,
             speedX: -1,
             speedY: 0,
             spriteIndex: 0,
