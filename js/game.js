@@ -12,6 +12,8 @@ function runGame() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         updatePlayer(gameModel);
         updateEnemy(gameModel);
+        updateBackground(gameModel);
+        drawBackground(ctx, gameModel);
         drawEnemy(ctx, gameModel);
         drawPlayer(ctx, gameModel);
         requestAnimationFrame(animate);
@@ -49,6 +51,17 @@ function initGameModel() {
             spriteIndex: 0,
             state: 0,
             spriteCounts: [6],
+        },
+        background: {
+            x: 0,
+            y: 0,
+            width: 2400,
+            height: 720,
+            speedX: -2,
+            speedY: 0,
+            spriteIndex: 0,
+            state: 0,
+            spriteCounts: [1],
         },
         images: {
             player: getImage('player'),
