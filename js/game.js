@@ -13,10 +13,13 @@ function runGame() {
         updatePlayer(gameModel);
         updateEnemy(gameModel);
         updateBackground(gameModel);
+        checkForCollision(gameModel);
         drawBackground(ctx, gameModel);
         drawEnemy(ctx, gameModel);
         drawPlayer(ctx, gameModel);
-        requestAnimationFrame(animate);
+        if (gameModel.game.isRunning) {
+            requestAnimationFrame(animate);
+        }
     };
     animate();
 }
@@ -28,6 +31,7 @@ function initGameModel() {
             width: 800,
             height: 720,
             spriteAnimationSkip: 3,
+            isRunning: true,
         },
         player: {
             x: 0,

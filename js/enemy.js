@@ -1,5 +1,4 @@
 function drawEnemy(ctx, gameModel) {
-    console.log(gameModel);
     drawSpriteFrame(ctx, gameModel.images.enemy, gameModel.enemy);
 }
 
