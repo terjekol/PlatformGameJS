@@ -18,7 +18,7 @@ function runGame() {
         drawEnemy(ctx, gameModel);
         drawPlayer(ctx, gameModel);
         drawScore(ctx, gameModel.game.score);
-        gameModel.game.score += 0.01;
+        gameModel.game.score += 0.03;
         if (gameModel.game.isRunning) {
             requestAnimationFrame(animate);
         }

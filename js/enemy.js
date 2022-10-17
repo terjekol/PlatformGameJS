@@ -8,7 +8,7 @@ function updateEnemy(gameModel) {
 
     if (enemy.x < -enemy.width) {
         enemy.x = gameModel.game.width;
-        enemy.speedX -= 0.1;
+        enemy.speedX -= 0.5;
     } else {
         enemy.x = enemy.x + enemy.speedX;
     }
