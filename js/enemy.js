@@ -5,8 +5,12 @@ function drawEnemy(ctx, gameModel) {
 function updateEnemy(gameModel) {
     const enemy = gameModel.enemy;
     updateSprite(gameModel, enemy);
-    enemy.x = enemy.x < -enemy.width
-        ? gameModel.game.width
-        : enemy.x + enemy.speedX;
+
+    if (enemy.x < -enemy.width) {
+        enemy.x = gameModel.game.width;
+        enemy.speedX -= 0.1;
+    } else {
+        enemy.x = enemy.x + enemy.speedX;
+    }
 }
 

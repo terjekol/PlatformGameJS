@@ -17,11 +17,26 @@ function runGame() {
         drawBackground(ctx, gameModel);
         drawEnemy(ctx, gameModel);
         drawPlayer(ctx, gameModel);
+        drawScore(ctx, gameModel.game.score);
+        gameModel.game.score += 0.01;
         if (gameModel.game.isRunning) {
             requestAnimationFrame(animate);
         }
     };
     animate();
+}
+
+function drawScore(ctx, score){
+    const text = 'Score: ' + Math.floor(score);
+    ctx.font = "50px arial";
+    ctx.shadowColor = "black";
+    ctx.shadowBlur = 7;
+    ctx.lineWidth = 5;
+    ctx.fillStyle = "white";
+    ctx.strokeText(text, 550, 100);
+    ctx.shadowBlur = 0;
+    ctx.fillText(text, 550, 100);
+
 }
 
 function initGameModel() {
@@ -30,6 +45,7 @@ function initGameModel() {
         game: {
             width: 800,
             height: 720,
+            score: 0,
             spriteAnimationSkip: 3,
             isRunning: true,
         },
