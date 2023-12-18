@@ -1,10 +1,9 @@
 class Game {
     constructor() {
         this.keys = new Set();
-        this.player = new Player(0, gameModel.game.height - 200, 200, 200, 0, 0, 0, 0, [7, 9]);
-        this.enemy = new Enemy(0, gameModel.game.height - 60, 80, 60, -1, 0, 0, 0, [6]);
-        this.background = new Background(0, 0, 2400, 720, -2, 0, 0, 0, [1]);
-
+        this.player = new Player(this);
+        this.enemy = new Enemy();
+        this.background = new Background();
         this.images = {
             player: this.getImage('player'),
             enemy: this.getImage('enemy'),

@@ -1,8 +1,8 @@
 class Player extends GameObject {
-    constructor(x, y, width, height, speedX, speedY, spriteIndex, state, spriteCounts) {
-        super(x, y, width, height, speedX, speedY, spriteIndex, state, spriteCounts);
+    constructor(game) {
+        super(200, 200, [7, 9]);
         this.downForce = 1;
-        this.y = gameModel.game.height - gameModel.player.height;
+        this.y = game.height - this.height;
     }
 
     update(gameModel) {

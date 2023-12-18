@@ -1,5 +1,6 @@
 class Background extends GameObject {
-    constructor(x, y, width, height, speedX, speedY, spriteIndex, state, spriteCounts) {
-        super(x, y, width, height, speedX, speedY, spriteIndex, state, spriteCounts);
+    constructor() {
+        super(2400, 720, [1]);
+        this.speedX = -2;
     }
 }

@@ -1,18 +1,15 @@
-class GameObject {
-    constructor(x, y, width, height, speedX, speedY, spriteIndex, state, spriteCounts) {
-        this.x = x;
-        this.y = y;
+class Sprite {
+    constructor(width, height, spriteCounts) {
         this.width = width;
         this.height = height;
-        this.speedX = speedX;
-        this.speedY = speedY;
-        this.spriteIndex = spriteIndex;
-        this.state = state;
+        this.speedX = 0;
+        this.speedY = 0;
+        this.spriteIndex = 0;
+        this.state = 0;
         this.spriteCounts = spriteCounts;
-        this.spriteSkipIndex = 0;
     }
 
-    updateSprite(gameModel) {
+    update(gameModel) {
         if (!this.spriteSkipIndex) {
             this.spriteSkipIndex = gameModel.game.spriteAnimationSkip;
         } else {

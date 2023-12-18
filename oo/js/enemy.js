@@ -1,13 +1,14 @@
 class Enemy extends GameObject {
-    constructor(x, y, width, height, speedX, speedY, spriteIndex, state, spriteCounts) {
-        super(x, y, width, height, speedX, speedY, spriteIndex, state, spriteCounts);
+    constructor(gameWidth) {
+        super(80, 60, [6]);
+        this.speedX = -1;
+        this.gameWidth = gameWidth;
     }
 
     update(gameModel) {
         this.updateSprite(gameModel);
-
         if (this.x < -this.width) {
-            this.x = gameModel.game.width;
+            this.x = this.gameWidth;
             this.speedX -= 0.5;
         } else {
             this.x = this.x + this.speedX;
