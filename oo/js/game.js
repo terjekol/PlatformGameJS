@@ -1,33 +1,38 @@
 class Game {
     constructor() {
         this.keys = new Set();
-        this.player = new Player(this);
-        this.enemy = new Enemy();
+        // this.player = new Player(this);
+        // this.enemy = new Enemy();
         this.background = new Background();
         this.images = {
             player: this.getImage('player'),
             enemy: this.getImage('enemy'),
             background: this.getImage('background'),
         };
+        this.width = 800;
+        this.height = 720;
     // gameModel.player.y = gameModel.game.height - gameModel.player.height;
     // gameModel.enemy.y = gameModel.game.height - gameModel.enemy.height;
     // gameModel.enemy.x = gameModel.game.width;
     }
 
-    runGame() {
+    getImage(name) {
+        return document.getElementById(name + 'Img');
+    }
+
+    run() {
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
-        canvas.width = gameModel.game.width;
-        canvas.height = gameModel.game.height;
+        canvas.width = this.width;
+        canvas.height = this.height;
         window.addEventListener('keydown', e => handleKey(true, e.key, gameModel));
         window.addEventListener('keyup', e => handleKey(false, e.key, gameModel));
 
-
         const animate = () => {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            player.update(gameModel);
-            enemy.update(gameModel);
-            background.update(gameModel);
+            this.player.update();
+            this.enemy.update();
+            this.background.update();
             checkForCollision(gameModel, player, enemy);
             drawBackground(ctx, gameModel, background);
             drawEnemy(ctx, gameModel, enemy);

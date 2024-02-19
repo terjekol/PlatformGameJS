@@ -1,4 +1,4 @@
-class Player extends GameObject {
+class Player extends Sprite {
     constructor(game) {
         super(200, 200, [7, 9]);
         this.downForce = 1;

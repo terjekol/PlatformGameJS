@@ -1,4 +1,4 @@
-class Enemy extends GameObject {
+class Enemy extends Sprite {
     constructor(gameWidth) {
         super(80, 60, [6]);
         this.speedX = -1;
