@@ -1,6 +1,8 @@
 class Game {
     constructor() {
         this.keys = new Set();
+        this.canvas = document.getElementById('gameCanvas');
+        this.ctx = this.canvas.getContext('2d');
         // this.player = new Player(this);
         // this.enemy = new Enemy();
         this.background = new Background();
@@ -22,20 +24,18 @@ class Game {
     }
 
     run() {
-        const canvas = document.getElementById('gameCanvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = this.width;
-        canvas.height = this.height;
+        this.canvas.width = this.width;
+        this.canvas.height = this.height;
         window.addEventListener('keydown', e => handleKey(true, e.key, gameModel));
         window.addEventListener('keyup', e => handleKey(false, e.key, gameModel));
 
         const animate = () => {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            this.ctx.clearRect(0, 0, this.width, this.height);
             // this.player.update();
             // this.enemy.update();
             this.background.update();
+            this.background.draw();
             // checkForCollision(gameModel, player, enemy);
-            drawBackground(ctx, gameModel, background);
             // drawEnemy(ctx, gameModel, enemy);
             // drawPlayer(ctx, gameModel, player);
             // drawScore(ctx, gameModel.game.score);
