@@ -3,17 +3,17 @@ class Game {
         this.keys = new Set();
         this.canvas = document.getElementById('gameCanvas');
         this.ctx = this.canvas.getContext('2d');
+        this.width = 800;
+        this.height = 720;
+        this.isRunning = true;
         // this.player = new Player(this);
         // this.enemy = new Enemy();
-        this.background = new Background();
+        this.background = new Background(this.width);
         this.images = {
             player: this.getImage('player'),
             enemy: this.getImage('enemy'),
             background: this.getImage('background'),
         };
-        this.width = 800;
-        this.height = 720;
-        this.isRunning = true;
     // gameModel.player.y = gameModel.game.height - gameModel.player.height;
     // gameModel.enemy.y = gameModel.game.height - gameModel.enemy.height;
     // gameModel.enemy.x = gameModel.game.width;

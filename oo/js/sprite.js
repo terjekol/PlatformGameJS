@@ -26,12 +26,13 @@ class Sprite {
         this.spriteIndex = (this.spriteIndex + 1) % spriteCount;
     }
 
-    draw() {
+    draw(offsetX) {
+        if (!offsetX) offsetX = 0;
         const frameY = this.state * this.height;
         const frameX = this.spriteIndex * this.width;
 
         this.ctx.drawImage(this.image, frameX, frameY,
-            this.width, this.height, this.x, this.y,
+            this.width, this.height, this.x + offsetX, this.y,
             this.width, this.height);
     }
 }

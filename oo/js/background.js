@@ -1,15 +1,16 @@
 class Background extends Sprite {
-    constructor() {
+    constructor(gameWidth) {
         super('background', 2400, 720, [1], null);
         this.speedX = -2;
+        this.gameWidth = gameWidth;
     }
 
     draw() {
         super.draw();
-        // const backgroundImageEndX = background.x + background.width;
-        // if(backgroundImageEndX < gameModel.game.width){
-        //     drawSpriteFrame(ctx, gameModel.images.background, {...background, x: background.x + background.width - 1});
-        // }
+        const backgroundImageEndX = this.x + this.width;
+        if(backgroundImageEndX < this.gameWidth){
+            super.draw(this.width - 1);
+        }
     }
     
     update() {
