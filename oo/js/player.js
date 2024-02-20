@@ -1,17 +1,18 @@
 class Player extends Sprite {
-    constructor(gameWidth, gameHeight) {
+    constructor(gameWidth, gameHeight, keys) {
         super('player', 200, 200, [7, 9], 3);
         this.downForce = 1;
         this.y = gameHeight - this.height;
         this.gameWidth = gameWidth;
         this.gameHeight = gameHeight;
+        this.keys = keys;
     }
 
     update() {
         super.update();
         this.updateHorizontalMovement();
-        // this.updateVerticalMovement(gameModel);
-        // setSpeed(gameModel, this);
+        this.updateVerticalMovement();
+        this.setSpeed();
     }
 
     updateHorizontalMovement() {
@@ -20,19 +21,22 @@ class Player extends Sprite {
         this.x = clamp(newX, 0, maxX);
     }
 
-    updateVerticalMovement(gameModel) {
+    updateVerticalMovement() {
         const newY = this.y + this.speedY;
-        const maxY = gameModel.game.height - this.height;
+        const maxY = this.gameHeight - this.height;
         this.y = clamp(newY, 0, maxY);
-        const playerIsOnGround = this.isOnGround(gameModel);
-        this.speedY = playerIsOnGround ? 0 : this.speedY + this.downForce;
+        this.speedY = this.isOnGround() ? 0 : this.speedY + this.downForce;
     }
 
-    isOnGround(gameModel) {
-        return this.y >= gameModel.game.height - this.height;
+    setSpeed() {
+        const keys = this.keys;
+        if (keys.has('ArrowRight')) this.speedX = 5;
+        else if (keys.has('ArrowLeft')) this.speedX = -5;
+        else if (keys.has('ArrowUp') && this.isOnGround()) this.speedY = -32;
+        else this.speedX = 0;
     }
 
-    draw(){
-        super.draw();
-    }
+    isOnGround() {
+        return this.y >= this.gameHeight - this.height;
+    } 
 }

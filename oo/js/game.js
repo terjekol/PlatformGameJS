@@ -6,7 +6,7 @@ class Game {
         this.width = 800;
         this.height = 720;
         this.isRunning = true;
-        this.player = new Player(this.width, this.height);
+        this.player = new Player(this.width, this.height, this.keys);
         // this.enemy = new Enemy();
         this.background = new Background(this.width);
         this.images = {

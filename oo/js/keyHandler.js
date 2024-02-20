@@ -7,7 +7,7 @@ class KeyHandler {
     handleKey(keyEvent){
         const key = keyEvent.key;
         if (!key.startsWith('Arrow')) return;
-        if (this.isKeyUp) this.keys.add(key);
-        else this.keys.delete(key);
+        if (this.isKeyUp) this.keys.delete(key);
+        else this.keys.add(key);
     }
 }
