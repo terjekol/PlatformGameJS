@@ -1,20 +1,22 @@
 class Player extends Sprite {
-    constructor(game) {
-        super(200, 200, [7, 9]);
+    constructor(gameWidth, gameHeight) {
+        super('player', 200, 200, [7, 9], 3);
         this.downForce = 1;
-        this.y = game.height - this.height;
+        this.y = gameHeight - this.height;
+        this.gameWidth = gameWidth;
+        this.gameHeight = gameHeight;
     }
 
-    update(gameModel) {
-        this.updateSprite(gameModel);
-        this.updateHorizontalMovement(gameModel);
-        this.updateVerticalMovement(gameModel);
-        setSpeed(gameModel, this);
+    update() {
+        super.update();
+        this.updateHorizontalMovement();
+        // this.updateVerticalMovement(gameModel);
+        // setSpeed(gameModel, this);
     }
 
-    updateHorizontalMovement(gameModel) {
+    updateHorizontalMovement() {
         const newX = this.x + this.speedX;
-        const maxX = gameModel.game.width - this.width;
+        const maxX = this.gameWidth - this.width;
         this.x = clamp(newX, 0, maxX);
     }
 
@@ -28,5 +30,9 @@ class Player extends Sprite {
 
     isOnGround(gameModel) {
         return this.y >= gameModel.game.height - this.height;
+    }
+
+    draw(){
+        super.draw();
     }
 }

@@ -6,7 +6,7 @@ class Game {
         this.width = 800;
         this.height = 720;
         this.isRunning = true;
-        // this.player = new Player(this);
+        this.player = new Player(this.width, this.height);
         // this.enemy = new Enemy();
         this.background = new Background(this.width);
         this.images = {
@@ -31,10 +31,11 @@ class Game {
 
         const animate = () => {
             this.ctx.clearRect(0, 0, this.width, this.height);
-            // this.player.update();
-            // this.enemy.update();
             this.background.update();
+            this.player.update();
             this.background.draw();
+            this.player.draw();
+            // this.enemy.update();
             // checkForCollision(gameModel, player, enemy);
             // drawEnemy(ctx, gameModel, enemy);
             // drawPlayer(ctx, gameModel, player);
