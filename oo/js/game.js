@@ -51,9 +51,8 @@ class Game {
         ctx.fillText(text, 550, 100);
     }
 
-    checkForCollision(gameModel) {
+    checkForCollision() {
         const margins = { left: 10, top: 20, right: 30, bottom: 20 };
-
         const isAboveEnemy = this.bottomEdge(this.player, margins) < this.topEdge(this.enemy, margins);
         const isBelowEnemy = this.topEdge(this.player, margins) > this.bottomEdge(this.enemy, margins);
         const isToTheRightOfEnemy = this.leftEdge(this.player, margins) > this.rightEdge(this.enemy, margins);
