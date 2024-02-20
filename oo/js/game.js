@@ -26,8 +26,10 @@ class Game {
     run() {
         this.canvas.width = this.width;
         this.canvas.height = this.height;
-        window.addEventListener('keydown', e => handleKey(true, e.key, gameModel));
-        window.addEventListener('keyup', e => handleKey(false, e.key, gameModel));
+        const keyDownHandler = new KeyHandler(false, this.keys);
+        const keyUpHandler = new KeyHandler(true, this.keys);
+        window.addEventListener('keydown', keyDownHandler.handleKey.bind(keyDownHandler));
+        window.addEventListener('keyup', keyUpHandler.handleKey.bind(keyUpHandler));
 
         const animate = () => {
             this.ctx.clearRect(0, 0, this.width, this.height);
@@ -57,11 +59,4 @@ class Game {
     //         player.speedX = 0;
     //     }
     // }
-
-    handleKey(isKeyUp, key, gameModel) {
-        if (!key.startsWith('Arrow')) return;
-        const keys = this.keys;
-        if (isKeyUp) keys.add(key);
-        else keys.delete(key);
-    }
 }
