@@ -19,9 +19,7 @@ const init = () => {
 }
 
 // Oppdateringsfunksjon for bakgrunnsposisjonen
-const updateBackgroundPosition = state => {
-    return { ...state, x: (state.x + state.speed) % state.imageWidth };
-}
+const updateBackgroundPosition = state => ({ ...state, x: (state.x + state.speed) % state.imageWidth });
 
 // Tegnefunksjon for bakgrunnen
 const drawBackground = (ctx, image, x) => {
