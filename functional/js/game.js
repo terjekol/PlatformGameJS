@@ -1,79 +1,36 @@
-class Game {
-    constructor() {
-        this.keys = new Set();
-        const canvas = document.getElementById('gameCanvas');
-        this.ctx = canvas.getContext('2d');
-        this.width = 800;
-        this.height = 720;
-        this.isRunning = true;
-        this.score = 0;
-        this.player = new Player(this.width, this.height, this.keys);
-        this.enemy = new Enemy(this.width, this.height);
-        this.background = new Background(this.width);
-        canvas.width = this.width;
-        canvas.height = this.height;
-        const keyDownHandler = new KeyHandler(false, this.keys);
-        const keyUpHandler = new KeyHandler(true, this.keys);
-        window.addEventListener('keydown', keyDownHandler.handleKey.bind(keyDownHandler));
-        window.addEventListener('keyup', keyUpHandler.handleKey.bind(keyUpHandler));
-    }
+const init = () => {
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = 800;
+    canvas.height = 720;
+    const image = getImage('background');
+    const initialState = {
+        x: 0,
+        speed: -1, 
+    };
+    const gameLoopFunction = (ctx, image, state, canvasWidth) => {
+        const newState = updateBackgroundPosition(state, canvasWidth);
+        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height); // Fjern tidligere tegning
+        drawBackground(ctx, image, newState);
+        requestAnimationFrame(() => gameLoopFunction(ctx, image, newState, canvasWidth));
+    };
+    gameLoopFunction(ctx, image, initialState, canvas.width);
+}
 
-    getImage(name) {
-        return document.getElementById(name + 'Img');
-    }
+// Oppdateringsfunksjon for bakgrunnsposisjonen
+function updateBackgroundPosition({ x, speed }, canvasWidth) {
+    return {
+        x: (x + speed) % canvasWidth, // Loop bakgrunnen
+        speed,
+    };
+}
 
-    run() {
-        this.ctx.clearRect(0, 0, this.width, this.height);
-        this.background.update();
-        this.background.draw();
-        this.player.update();
-        this.player.draw();
-        this.enemy.update();
-        this.enemy.draw();
-        this.drawScore();
-        this.checkForCollision();
-        this.score += 0.03;
-        if (this.isRunning) {
-            requestAnimationFrame(this.run.bind(this));
-        }
-    }
+// Tegnefunksjon for bakgrunnen
+const drawBackground = (ctx, backgroundImage, { x }) => {
+    ctx.drawImage(backgroundImage, x, 0);
+    ctx.drawImage(backgroundImage, x + backgroundImage.width, 0); // Tegn en ekstra for å dekke hele canvas
+};
 
-    drawScore() {
-        const ctx = this.ctx;
-        const text = 'Score: ' + Math.floor(this.score);
-        ctx.font = "50px arial";
-        ctx.shadowColor = "black";
-        ctx.shadowBlur = 7;
-        ctx.lineWidth = 5;
-        ctx.fillStyle = "white";
-        ctx.strokeText(text, 550, 100);
-        ctx.shadowBlur = 0;
-        ctx.fillText(text, 550, 100);
-    }
-
-    checkForCollision() {
-        const margins = { left: 10, top: 20, right: 30, bottom: 20 };
-        const isAboveEnemy = this.bottomEdge(this.player, margins) < this.topEdge(this.enemy, margins);
-        const isBelowEnemy = this.topEdge(this.player, margins) > this.bottomEdge(this.enemy, margins);
-        const isToTheRightOfEnemy = this.leftEdge(this.player, margins) > this.rightEdge(this.enemy, margins);
-        const isToTheLeftOfEnemy = this.rightEdge(this.player, margins) < this.leftEdge(this.enemy, margins);
-        const noCollision = isAboveEnemy || isBelowEnemy || isToTheLeftOfEnemy || isToTheRightOfEnemy;
-        this.isRunning = noCollision;
-    }
-
-    leftEdge(obj, margins) {
-        return obj.x + margins.left;
-    }
-
-    rightEdge(obj, margins) {
-        return obj.x + obj.width - margins.right;
-    }
-
-    bottomEdge(obj, margins) {
-        return obj.y + obj.height - margins.bottom;
-    }
-
-    topEdge(obj, margins) {
-        return obj.y + margins.top;
-    }
+function getImage(name) {
+    return document.getElementById(name + 'Img');
 }

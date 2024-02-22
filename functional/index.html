@@ -6,13 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JavaScript platform game</title>
-    <script src="./js/sprite.js"></script>
-    <script src="./js/background.js"></script>
-    <script src="./js/enemy.js"></script>
-    <script src="./js/player.js"></script>
     <script src="./js/game.js"></script>
-    <script src="./js/common.js"></script>
-    <script src="./js/keyHandler.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ramda/0.29.1/ramda.min.js" integrity="sha512-PVSAmDFNqey8GMII8s9rjjkCFvUgzfsfi8FCRxQa3TkPZfdjCIUM+6eAcHIFrLfW5CTFAwAYS4pzl7FFC/KE7Q==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <style>
         body {
@@ -32,7 +26,7 @@
     </style>
 </head>
 
-<body onload="new Game().run()">
+<body onload="init()">
     <!-- Game art by: https://bevouliin.com/ -->
     <canvas id="gameCanvas"></canvas>
     <img id="playerImg" src="../img/player.png" />
