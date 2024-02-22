@@ -19,7 +19,9 @@ const init = () => {
             width, height);
     });
     const drawBackground = drawImage(images.background, R.__, 0);
-    const drawPlayer = drawSprite(images.player, 200, 200, R.__, canvas.height - images.player.height, R.__, R.__);
+    const playerSpriteSize = 200;
+    const playerY = canvas.height - playerSpriteSize;
+    const drawPlayer = drawSprite(images.player, playerSpriteSize, playerSpriteSize, R.__, playerY, R.__, R.__);
     const draw = state => {
         drawBackground(state.x);
         drawBackground(state.x + images.background.width - 1);
