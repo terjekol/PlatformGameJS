@@ -5,7 +5,7 @@ const init = () => {
     canvas.height = 720;
     const initialState = {
         background: { x: 0, speed: -2 },
-        player: { x: 0, speedX: 0, speedY: 0, spriteIndex: 0, playerMode: 0 },
+        player: { x: 0, speedX: 0, speedY: 0, spriteIndex: 0, spriteSkipIndex: 0, playerMode: 0 },
         enemy: { x: 0, speedX: -1, speedY: 0, spriteIndex: 0 },
     };
     const getImage = name => document.getElementById(name + 'Img');
@@ -27,11 +27,15 @@ const init = () => {
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
         drawBackground(state.background.x);
         drawBackground(state.background.x + images.background.width - 1);
-        drawPlayer(state.player.x, 0, 0);
+        drawPlayer(state.player.x, state.player.spriteIndex, 0);
         return state;
     };
     const updateBackground = R.curry((imageWidth, state) => ({ ...state, x: (state.x + state.speed) % imageWidth }))(images.background.width);
-    const updatePlayer = state => state;
+    const updatePlayer = state => {
+        return state.spriteSkipIndex == 3
+            ? { ...state, spriteIndex: (state.spriteIndex + 1) % 7, spriteSkipIndex: 0 }
+            : { ...state, spriteSkipIndex: state.spriteSkipIndex + 1 };
+    }
     const updateEnemy = state => state;
     const update = state => ({
         background: updateBackground(state.background),
@@ -41,7 +45,7 @@ const init = () => {
     const updateAndDraw = R.compose(update, draw);
     const gameLoop = state => {
         const newState = updateAndDraw(state);
-        requestAnimationFrame(()=>gameLoop(newState));
+        requestAnimationFrame(() => gameLoop(newState));
     };
     gameLoop(initialState);
 }
