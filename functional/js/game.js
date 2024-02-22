@@ -10,12 +10,20 @@ const init = () => {
     const getImage = name => document.getElementById(name + 'Img');
     const images = ['background', 'player', 'enemy']
         .reduce((obj, name) => R.assoc(name, getImage(name), obj), {});
-    const playerY = canvas.height - images.player.height;
     const drawImage = R.curry(ctx.drawImage.bind(ctx));
+    const drawSprite = R.curry((image, width, height, x, y, spriteIndex, playerMode) => {
+        const frameY = playerMode * height;
+        const frameX = spriteIndex * width;    
+        ctx.drawImage(image, frameX, frameY,
+            width, height, x, y,
+            width, height);
+    });
     const drawBackground = drawImage(images.background, R.__, 0);
+    const drawPlayer = drawSprite(images.player, 200, 200, R.__, canvas.height - images.player.height, R.__, R.__);
     const draw = state => {
         drawBackground(state.x);
         drawBackground(state.x + images.background.width - 1);
+        drawPlayer(0, 0, 0);
     };
     const updateBackground = (state, imageWidth) => ({ ...state, x: (state.x + state.speed) % imageWidth });
     const gameLoop = R.curryN(4, (ctx, images, state) => {
