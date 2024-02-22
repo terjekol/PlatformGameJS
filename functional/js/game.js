@@ -12,7 +12,7 @@ const init = () => {
         .reduce((obj, name) => R.assoc(name, getImage(name), obj), {});
     const playerY = canvas.height - images.player.height;
     const drawImage = R.curry(ctx.drawImage.bind(ctx));
-    const drawBackground = drawImage(images.background);
+    const drawBackground = drawImage(images.background, R.__, 0);
     const draw = state => {
         drawBackground(state.x);
         drawBackground(state.x + images.background.width - 1);
