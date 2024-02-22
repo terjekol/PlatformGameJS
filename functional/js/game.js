@@ -4,13 +4,9 @@ const init = () => {
     canvas.width = 800;
     canvas.height = 720;
     const initialState = {
-        background: {
-            x: 0,
-            speed: -2,
-        }, 
-        player: {
-            x: 0,
-        },
+        background: { x: 0, speed: -2 },
+        player: { x: 0, speedX: 0, speedY: 0, spriteIndex: 0, playerMode: 0 },
+        enemy: { x: 0, speedX: -1, speedY: 0, spriteIndex: 0 },
     };
     const getImage = name => document.getElementById(name + 'Img');
     const images = ['background', 'player', 'enemy']
@@ -28,21 +24,25 @@ const init = () => {
     const playerY = canvas.height - playerSpriteSize;
     const drawPlayer = drawSprite(images.player, playerSpriteSize, playerSpriteSize, R.__, playerY, R.__, R.__);
     const draw = state => {
+        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
         drawBackground(state.background.x);
         drawBackground(state.background.x + images.background.width - 1);
         drawPlayer(state.player.x, 0, 0);
+        return state;
     };
-    const updateBackground = (state, imageWidth) => ({ ...state, x: (state.x + state.speed) % imageWidth });
-    const gameLoop = R.curryN(4, (ctx, images, state) => {
-        const newBackgroundState = updateBackground(state.background, images.background.width);
-        const newState = {
-            player: {...state.player},
-            background: newBackgroundState,
-        }
-        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-        draw(newState);
-        requestAnimationFrame(gameLoop(newState));
-    })(ctx, images);
-    gameLoop(initialState, null);
+    const updateBackground = R.curry((imageWidth, state) => ({ ...state, x: (state.x + state.speed) % imageWidth }))(images.background.width);
+    const updatePlayer = state => state;
+    const updateEnemy = state => state;
+    const update = state => ({
+        background: updateBackground(state.background),
+        player: updatePlayer(state.player),
+        enemy: updateEnemy(state.enemy),
+    });
+    const updateAndDraw = R.compose(update, draw);
+    const gameLoop = state => {
+        const newState = updateAndDraw(state);
+        requestAnimationFrame(()=>gameLoop(newState));
+    };
+    gameLoop(initialState);
 }
 
