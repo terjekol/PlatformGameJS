@@ -10,8 +10,8 @@ const init = () => {
     };
     const gameLoopFunction = (ctx, image, state, canvasWidth) => {
         const newState = updateBackgroundPosition(state, canvasWidth);
-        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height); // Fjern tidligere tegning
-        drawBackground(ctx, image, newState);
+        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height); 
+        drawBackground(ctx, image, newState.x);
         requestAnimationFrame(() => gameLoopFunction(ctx, image, newState, canvasWidth));
     };
     gameLoopFunction(ctx, image, initialState, canvas.width);
@@ -26,11 +26,9 @@ function updateBackgroundPosition({ x, speed }, canvasWidth) {
 }
 
 // Tegnefunksjon for bakgrunnen
-const drawBackground = (ctx, backgroundImage, { x }) => {
-    ctx.drawImage(backgroundImage, x, 0);
-    ctx.drawImage(backgroundImage, x + backgroundImage.width, 0); // Tegn en ekstra for å dekke hele canvas
+const drawBackground = (ctx, image, x) => {
+    ctx.drawImage(image, x, 0);
+    ctx.drawImage(image, x + image.width - 1, 0); 
 };
 
-function getImage(name) {
-    return document.getElementById(name + 'Img');
-}
+const getImage = name => document.getElementById(name + 'Img');
