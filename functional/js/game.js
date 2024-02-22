@@ -8,13 +8,15 @@ const init = () => {
         x: 0,
         speed: -2, 
     };
-    const gameLoopFunction = (ctx, image, state, canvasWidth) => {
+    const gameLoopFunctionFullImpl = (ctx, image, state) => {
         const newState = updateBackgroundPosition(state, image.width);
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height); 
         drawBackground(ctx, image, newState.x);
-        requestAnimationFrame(() => gameLoopFunction(ctx, image, newState, canvasWidth));
+        requestAnimationFrame(() => gameLoopFunction(newState));
     };
-    gameLoopFunction(ctx, image, initialState, canvas.width);
+    const gameLoopFunctionFull = R.curry(gameLoopFunctionFullImpl);
+    const gameLoopFunction = gameLoopFunctionFull(ctx, image);
+    gameLoopFunction(initialState);
 }
 
 // Oppdateringsfunksjon for bakgrunnsposisjonen
