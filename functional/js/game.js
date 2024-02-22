@@ -9,7 +9,7 @@ const init = () => {
         speed: -2,
         imageWidth: image.width,
     };
-    const gameLoop = R.curry((ctx, image, state, dummy) => {
+    const gameLoop = R.curryN(4,(ctx, image, state) => {
         const newState = updateBackgroundPosition(state);
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
         drawBackground(ctx, image, newState.x);
