@@ -6,10 +6,10 @@ const init = () => {
     const image = getImage('background');
     const initialState = {
         x: 0,
-        speed: -1, 
+        speed: -2, 
     };
     const gameLoopFunction = (ctx, image, state, canvasWidth) => {
-        const newState = updateBackgroundPosition(state, canvasWidth);
+        const newState = updateBackgroundPosition(state, image.width);
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height); 
         drawBackground(ctx, image, newState.x);
         requestAnimationFrame(() => gameLoopFunction(ctx, image, newState, canvasWidth));
@@ -20,7 +20,7 @@ const init = () => {
 // Oppdateringsfunksjon for bakgrunnsposisjonen
 function updateBackgroundPosition({ x, speed }, canvasWidth) {
     return {
-        x: (x + speed) % canvasWidth, // Loop bakgrunnen
+        x: (x + speed) % canvasWidth, 
         speed,
     };
 }
