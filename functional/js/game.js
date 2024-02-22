@@ -3,25 +3,25 @@ const init = () => {
     const ctx = canvas.getContext('2d');
     canvas.width = 800;
     canvas.height = 720;
-    const image = getImage('background');
     const initialState = {
         x: 0,
-        speed: -2,
-        imageWidth: image.width,
+        speed: -2,        
     };
-    const gameLoop = R.curryN(4,(ctx, image, state) => {
-        const newState = updateBackgroundPosition(state);
+    const images = ['background','player','enemy']
+    .reduce((obj,name)=>R.assoc(name, getImage(name), obj), {});
+    console.log(images);
+
+    const gameLoop = R.curryN(4,(ctx, images, state) => {
+        const newState = updateBackground(state, images.background.width);
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-        drawBackground(ctx, image, newState.x);
+        drawBackground(ctx, images.background, newState.x);
         requestAnimationFrame(gameLoop(newState));
-    })(ctx, image);
+    })(ctx, images);
     gameLoop(initialState, null);
 }
 
-// Oppdateringsfunksjon for bakgrunnsposisjonen
-const updateBackgroundPosition = state => ({ ...state, x: (state.x + state.speed) % state.imageWidth });
+const updateBackground = (state,imageWidth) => ({ ...state, x: (state.x + state.speed) % imageWidth });
 
-// Tegnefunksjon for bakgrunnen
 const drawBackground = (ctx, image, x) => {
     ctx.drawImage(image, x, 0);
     ctx.drawImage(image, x + image.width - 1, 0);
