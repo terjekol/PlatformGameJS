@@ -31,9 +31,16 @@ const init = () => {
         return state;
     };
     const updateBackground = R.curry((imageWidth, state) => ({ ...state, x: (state.x + state.speed) % imageWidth }))(images.background.width);
-    const updatePlayer = state => state.spriteSkipIndex == 3
+
+    const updatePlayerHorizontalMovement = state => state;
+    const updatePlayerVerticalMovement = state => state;
+    const updatePlayerSpeed = state => state;
+    const updatePlayerSprite = state => state.spriteSkipIndex == 3
         ? { ...state, spriteIndex: (state.spriteIndex + 1) % 7, spriteSkipIndex: 0 }
         : { ...state, spriteSkipIndex: state.spriteSkipIndex + 1 };
+    const updatePlayer = R.compose(
+        updatePlayerHorizontalMovement, updatePlayerVerticalMovement, 
+        updatePlayerSpeed, updatePlayerSprite);
 
     const updateEnemy = state => state;
     const update = state => ({

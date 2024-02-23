@@ -12,7 +12,7 @@ class Player extends Sprite {
         super.update();
         this.updateHorizontalMovement();
         this.updateVerticalMovement();
-        this.setSpeed();
+        this.updateSpeed();
     }
 
     updateHorizontalMovement() {
@@ -28,7 +28,7 @@ class Player extends Sprite {
         this.speedY = this.isOnGround() ? 0 : this.speedY + this.downForce;
     }
 
-    setSpeed() {
+    updateSpeed() {
         const keys = this.keys;
         if (keys.has('ArrowRight')) this.speedX = 5;
         else if (keys.has('ArrowLeft')) this.speedX = -5;

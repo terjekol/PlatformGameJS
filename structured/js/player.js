@@ -6,10 +6,10 @@ function updatePlayer(gameModel) {
     updateHorizontalMovement(gameModel);
     updateVerticalMovement(gameModel);
     updateSprite(gameModel, gameModel.player);
-    setSpeed(gameModel);
+    updateSpeed(gameModel);
 }
 
-function setSpeed(gameModel) {
+function updateSpeed(gameModel) {
     const keys = gameModel.keys;
     if (keys.has('ArrowRight')) gameModel.player.speedX = 5;
     else if (keys.has('ArrowLeft')) gameModel.player.speedX = -5;
