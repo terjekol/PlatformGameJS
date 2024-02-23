@@ -5,7 +5,12 @@ const init = () => {
     canvas.height = 720;
     const initialState = {
         background: { x: 0, speed: -2 },
-        player: { x: 0, speedX: 0, speedY: 0, spriteIndex: 0, spriteSkipIndex: 0, playerMode: 0 },
+        player: { 
+            x: 0, speedX: 0, 
+            y: 0, speedY: -1, 
+            spriteIndex: 0, spriteSkipIndex: 0, playerMode: 0, 
+            downForce: 1,
+         },
         enemy: { x: 0, speedX: -1, speedY: 0, spriteIndex: 0 },
     };
     const getImage = name => document.getElementById(name + 'Img');
@@ -22,18 +27,25 @@ const init = () => {
     const drawBackground = drawImage(images.background, R.__, 0);
     const playerSpriteSize = 200;
     const playerY = canvas.height - playerSpriteSize;
-    const drawPlayer = drawSprite(images.player, playerSpriteSize, playerSpriteSize, R.__, playerY, R.__, R.__);
+    const drawPlayer = drawSprite(images.player, playerSpriteSize, playerSpriteSize, R.__, R.__, R.__, R.__);
     const draw = state => {
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
         drawBackground(state.background.x);
         drawBackground(state.background.x + images.background.width - 1);
-        drawPlayer(state.player.x, state.player.spriteIndex, 0);
+        drawPlayer(state.player.x, state.player.y, state.player.spriteIndex, 0);
         return state;
     };
     const updateBackground = R.curry((imageWidth, state) => ({ ...state, x: (state.x + state.speed) % imageWidth }))(images.background.width);
-
+    const isPlayerOnGround = state => state.y >= playerY;    
     const updatePlayerHorizontalMovement = state => state;
-    const updatePlayerVerticalMovement = state => state;
+    const updatePlayerVerticalMovement = state => {
+        const newYdraft = state.y + state.speedY;
+        const maxY = canvas.height - playerSpriteSize;
+        const newY = R.clamp(0, maxY, newYdraft);
+        const playerIsOnGround = isPlayerOnGround(state);
+        const newSpeedY = playerIsOnGround ? 0 : state.speedY + state.downForce;
+        return {...state, y: newY, speedY: newSpeedY};
+    };
     const updatePlayerSpeed = state => state;
     const updatePlayerSprite = state => state.spriteSkipIndex == 3
         ? { ...state, spriteIndex: (state.spriteIndex + 1) % 7, spriteSkipIndex: 0 }
