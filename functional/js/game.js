@@ -4,6 +4,7 @@ const init = () => {
     canvas.width = 800;
     canvas.height = 720;
     const playerSpriteSize = 200;
+    const backgroundWidth = 2400;
     const playerY = canvas.height - playerSpriteSize;
     const initialState = {
         background: { x: 0, speed: -2 },
@@ -40,40 +41,47 @@ const init = () => {
         drawPlayer(state.player.x, state.player.y, state.player.spriteIndex, 0);
         return state;
     };
-    const updateBackground = R.curry((imageWidth, state) => ({ ...state, x: (state.x + state.speed) % imageWidth }))(images.background.width);
-    const isPlayerOnGround = state => state.y >= playerY;
-    const updatePlayerHorizontalMovement = state => {
-        const newXdraft = state.x + state.speedX;
+    const updateBackground = state => {
+        const background = state.background;
+        return R.assocPath(['background','x'],(background.x + background.speed) % backgroundWidth, state);
+    }
+    const updatePlayerHorizontalMovement = state => {        
+        const player = state.player;
+        const newXdraft = player.x + player.speedX;
         const maxX = canvas.width - playerSpriteSize;
         const newX = R.clamp(0, maxX, newXdraft);
-        return { ...state, x: newX };
+        return R.assocPath(['player','x'], newX, state);
     };
+    const isPlayerOnGround = state => state.y >= playerY;
     const updatePlayerVerticalMovement = state => {
-        const newYdraft = state.y + state.speedY;
+        const player = state.player;
+        const newYdraft = player.y + player.speedY;
         const maxY = canvas.height - playerSpriteSize;
         const newY = R.clamp(0, maxY, newYdraft);
-        const playerIsOnGround = isPlayerOnGround(state);
-        const newSpeedY = playerIsOnGround ? 0 : state.speedY + state.downForce;
-        return { ...state, y: newY, speedY: newSpeedY };
+        const playerIsOnGround = isPlayerOnGround(player);
+        const newSpeedY = playerIsOnGround ? 0 : player.speedY + player.downForce;
+        const tmpState = R.assocPath(['player', 'speedY'], newSpeedY, state);
+        return R.assocPath(['player', 'y'], newY, tmpState);
     };
-    const updatePlayerSpeedX = state =>
-        R.assoc('speedX', keys.right ? 5 : keys.left ? -5 : 0, state);
+    const updatePlayerSpeedX = state => 
+        R.assocPath(['player','speedX'], state.keys.right ? 5 : state.keys.left ? -5 : 0, state);
     const updatePlayerSpeedY = state =>
-        state.keys.up && isPlayerOnGround(state) ? R.assoc('speedY', -32, state) : state;
-    const updatePlayerSprite = state => state.spriteSkipIndex == 3
-        ? { ...state, spriteIndex: (state.spriteIndex + 1) % 7, spriteSkipIndex: 0 }
-        : { ...state, spriteSkipIndex: state.spriteSkipIndex + 1 };
-    const updatePlayer = R.compose(
+        state.keys.up && isPlayerOnGround(state.player) ? R.assocPath(['player','speedY'], -32, state) : state;
+    const updatePlayerSprite = state => {
+        const player = state.player;
+        if(player.spriteSkipIndex == 3){
+            const tmpState = R.assocPath(['player','spriteIndex'], (state.spriteIndex + 1) % 7, state);            
+            return R.assocPath(['player','spriteSkipIndex'], 0, tmpState);
+        } else {
+            return R.assocPath(['player','spriteSkipIndex'], player.spriteSkipIndex + 1, state);
+        }
+    }
+    const update = R.compose(
+        updateBackground,
         updatePlayerSpeedX, updatePlayerSpeedY,
         updatePlayerHorizontalMovement, updatePlayerVerticalMovement,
         updatePlayerSprite);
-
-    const updateEnemy = state => state;
-    const update = state => ({
-        background: updateBackground(state.background),
-        player: updatePlayer(state.player),
-        enemy: updateEnemy(state.enemy),
-    });
+    // const updateEnemy = state => state;    
     const updateAndDraw = R.compose(update, draw);
     const gameLoop = state => {
         const newState = updateAndDraw(state);
