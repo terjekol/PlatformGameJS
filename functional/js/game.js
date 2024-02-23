@@ -37,7 +37,12 @@ const init = () => {
     };
     const updateBackground = R.curry((imageWidth, state) => ({ ...state, x: (state.x + state.speed) % imageWidth }))(images.background.width);
     const isPlayerOnGround = state => state.y >= playerY;    
-    const updatePlayerHorizontalMovement = state => state;
+    const updatePlayerHorizontalMovement = state => {
+        const newXdraft = state.x + state.speedX;
+        const maxX = canvas.width - playerSpriteSize;
+        const newX = R.clamp(0, maxX, newXdraft);
+        return {...state, x: newX};
+    };
     const updatePlayerVerticalMovement = state => {
         const newYdraft = state.y + state.speedY;
         const maxY = canvas.height - playerSpriteSize;
