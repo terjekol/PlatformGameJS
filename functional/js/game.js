@@ -3,15 +3,22 @@ const init = () => {
     const ctx = canvas.getContext('2d');
     canvas.width = 800;
     canvas.height = 720;
+    const playerSpriteSize = 200;
+    const playerY = canvas.height - playerSpriteSize;
     const initialState = {
         background: { x: 0, speed: -2 },
         player: { 
             x: 0, speedX: 0, 
-            y: 0, speedY: -1, 
+            y: playerY, speedY: -1, 
             spriteIndex: 0, spriteSkipIndex: 0, playerMode: 0, 
             downForce: 1,
          },
         enemy: { x: 0, speedX: -1, speedY: 0, spriteIndex: 0 },
+        keys: {
+            ArrowRight: false,
+            ArrowLeft: false,
+            ArrowUp: false,
+        },
     };
     const getImage = name => document.getElementById(name + 'Img');
     const images = ['background', 'player', 'enemy']
@@ -25,8 +32,6 @@ const init = () => {
             width, height);
     });
     const drawBackground = drawImage(images.background, R.__, 0);
-    const playerSpriteSize = 200;
-    const playerY = canvas.height - playerSpriteSize;
     const drawPlayer = drawSprite(images.player, playerSpriteSize, playerSpriteSize, R.__, R.__, R.__, R.__);
     const draw = state => {
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
