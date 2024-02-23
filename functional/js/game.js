@@ -1,4 +1,4 @@
-const init = () => {
+const run = () => {
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
     canvas.width = 800;
@@ -91,15 +91,10 @@ const init = () => {
         updatePlayerSpeedX, updatePlayerSpeedY,
         updatePlayerHorizontalMovement, updatePlayerVerticalMovement,
         updatePlayerSprite);
-    // const updateEnemy = state => state;    
     const updateAndDraw = R.compose(update, draw);
-    // let count = 2;
     const gameLoop = state => {
         const newState = updateAndDraw(state);
-        // if (count > 0) 
         requestAnimationFrame(() => gameLoop(newState));
-        // count--;
     };
     gameLoop(initialState);
 }
-
