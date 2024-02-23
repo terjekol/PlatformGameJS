@@ -70,7 +70,7 @@ const init = () => {
     const updatePlayerSprite = state => {
         const player = state.player;
         if(player.spriteSkipIndex == 3){
-            const tmpState = R.assocPath(['player','spriteIndex'], (state.spriteIndex + 1) % 7, state);            
+            const tmpState = R.assocPath(['player','spriteIndex'], (player.spriteIndex + 1) % 7, state);            
             return R.assocPath(['player','spriteSkipIndex'], 0, tmpState);
         } else {
             return R.assocPath(['player','spriteSkipIndex'], player.spriteSkipIndex + 1, state);
@@ -85,7 +85,7 @@ const init = () => {
     const updateAndDraw = R.compose(update, draw);
     const gameLoop = state => {
         const newState = updateAndDraw(state);
-        requestAnimationFrame(() => gameLoop(newState));
+        requestAnimationFrame(() => gameLoop(newState));        
     };
     gameLoop(initialState);
 }
