@@ -7,17 +7,17 @@ const init = () => {
     const playerY = canvas.height - playerSpriteSize;
     const initialState = {
         background: { x: 0, speed: -2 },
-        player: { 
-            x: 0, speedX: 0, 
-            y: playerY, speedY: -1, 
-            spriteIndex: 0, spriteSkipIndex: 0, playerMode: 0, 
+        player: {
+            x: 0, speedX: 0,
+            y: playerY, speedY: -1,
+            spriteIndex: 0, spriteSkipIndex: 0, playerMode: 0,
             downForce: 1,
-         },
+        },
         enemy: { x: 0, speedX: -1, speedY: 0, spriteIndex: 0 },
         keys: {
-            ArrowRight: false,
-            ArrowLeft: false,
-            ArrowUp: false,
+            right: false,
+            left: false,
+            up: false,
         },
     };
     const getImage = name => document.getElementById(name + 'Img');
@@ -41,12 +41,12 @@ const init = () => {
         return state;
     };
     const updateBackground = R.curry((imageWidth, state) => ({ ...state, x: (state.x + state.speed) % imageWidth }))(images.background.width);
-    const isPlayerOnGround = state => state.y >= playerY;    
+    const isPlayerOnGround = state => state.y >= playerY;
     const updatePlayerHorizontalMovement = state => {
         const newXdraft = state.x + state.speedX;
         const maxX = canvas.width - playerSpriteSize;
         const newX = R.clamp(0, maxX, newXdraft);
-        return {...state, x: newX};
+        return { ...state, x: newX };
     };
     const updatePlayerVerticalMovement = state => {
         const newYdraft = state.y + state.speedY;
@@ -54,15 +54,19 @@ const init = () => {
         const newY = R.clamp(0, maxY, newYdraft);
         const playerIsOnGround = isPlayerOnGround(state);
         const newSpeedY = playerIsOnGround ? 0 : state.speedY + state.downForce;
-        return {...state, y: newY, speedY: newSpeedY};
+        return { ...state, y: newY, speedY: newSpeedY };
     };
-    const updatePlayerSpeed = state => state;
+    const updatePlayerSpeedX = state =>
+        R.assoc('speedX', keys.right ? 5 : keys.left ? -5 : 0, state);
+    const updatePlayerSpeedY = state =>
+        state.keys.up && isPlayerOnGround(state) ? R.assoc('speedY', -32, state) : state;
     const updatePlayerSprite = state => state.spriteSkipIndex == 3
         ? { ...state, spriteIndex: (state.spriteIndex + 1) % 7, spriteSkipIndex: 0 }
         : { ...state, spriteSkipIndex: state.spriteSkipIndex + 1 };
     const updatePlayer = R.compose(
-        updatePlayerHorizontalMovement, updatePlayerVerticalMovement, 
-        updatePlayerSpeed, updatePlayerSprite);
+        updatePlayerSpeedX, updatePlayerSpeedY,
+        updatePlayerHorizontalMovement, updatePlayerVerticalMovement,
+        updatePlayerSprite);
 
     const updateEnemy = state => state;
     const update = state => ({
