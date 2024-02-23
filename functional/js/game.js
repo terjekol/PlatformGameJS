@@ -6,6 +6,20 @@ const init = () => {
     const playerSpriteSize = 200;
     const backgroundWidth = 2400;
     const playerY = canvas.height - playerSpriteSize;
+    const mutableKeys = {
+        right: false,
+        left: false,
+        up: false,
+    };
+    const handleKey = keyboardEvent => {
+        const key = keyboardEvent.key;
+        if (!key.startsWith('Arrow')) return;
+        const fieldName = key.substring(5).toLowerCase();
+        mutableKeys[fieldName] = keyboardEvent.type.endsWith('down');
+    };
+    window.addEventListener('keydown', handleKey);
+    window.addEventListener('keyup', handleKey);
+
     const initialState = {
         background: { x: 0, speed: -2 },
         player: {
@@ -15,11 +29,6 @@ const init = () => {
             downForce: 1,
         },
         enemy: { x: 0, speedX: -1, speedY: 0, spriteIndex: 0 },
-        keys: {
-            right: false,
-            left: false,
-            up: false,
-        },
     };
     const getImage = name => document.getElementById(name + 'Img');
     const images = ['background', 'player', 'enemy']
@@ -43,14 +52,14 @@ const init = () => {
     };
     const updateBackground = state => {
         const background = state.background;
-        return R.assocPath(['background','x'],(background.x + background.speed) % backgroundWidth, state);
+        return R.assocPath(['background', 'x'], (background.x + background.speed) % backgroundWidth, state);
     }
-    const updatePlayerHorizontalMovement = state => {        
+    const updatePlayerHorizontalMovement = state => {
         const player = state.player;
         const newXdraft = player.x + player.speedX;
         const maxX = canvas.width - playerSpriteSize;
         const newX = R.clamp(0, maxX, newXdraft);
-        return R.assocPath(['player','x'], newX, state);
+        return R.assocPath(['player', 'x'], newX, state);
     };
     const isPlayerOnGround = state => state.y >= playerY;
     const updatePlayerVerticalMovement = state => {
@@ -63,17 +72,17 @@ const init = () => {
         const tmpState = R.assocPath(['player', 'speedY'], newSpeedY, state);
         return R.assocPath(['player', 'y'], newY, tmpState);
     };
-    const updatePlayerSpeedX = state => 
-        R.assocPath(['player','speedX'], state.keys.right ? 5 : state.keys.left ? -5 : 0, state);
+    const updatePlayerSpeedX = state =>
+        R.assocPath(['player', 'speedX'], mutableKeys.right ? 5 : mutableKeys.left ? -5 : 0, state);
     const updatePlayerSpeedY = state =>
-        state.keys.up && isPlayerOnGround(state.player) ? R.assocPath(['player','speedY'], -32, state) : state;
+        mutableKeys.up && isPlayerOnGround(state.player) ? R.assocPath(['player', 'speedY'], -32, state) : state;
     const updatePlayerSprite = state => {
         const player = state.player;
-        if(player.spriteSkipIndex == 3){
-            const tmpState = R.assocPath(['player','spriteIndex'], (player.spriteIndex + 1) % 7, state);            
-            return R.assocPath(['player','spriteSkipIndex'], 0, tmpState);
+        if (player.spriteSkipIndex == 3) {
+            const tmpState = R.assocPath(['player', 'spriteIndex'], (player.spriteIndex + 1) % 7, state);
+            return R.assocPath(['player', 'spriteSkipIndex'], 0, tmpState);
         } else {
-            return R.assocPath(['player','spriteSkipIndex'], player.spriteSkipIndex + 1, state);
+            return R.assocPath(['player', 'spriteSkipIndex'], player.spriteSkipIndex + 1, state);
         }
     }
     const update = R.compose(
@@ -85,7 +94,7 @@ const init = () => {
     const updateAndDraw = R.compose(update, draw);
     const gameLoop = state => {
         const newState = updateAndDraw(state);
-        requestAnimationFrame(() => gameLoop(newState));        
+        requestAnimationFrame(() => gameLoop(newState));
     };
     gameLoop(initialState);
 }
