@@ -24,7 +24,7 @@ const init = () => {
         background: { x: 0, speed: -2 },
         player: {
             x: 0, speedX: 0,
-            y: playerY, speedY: -1,
+            y: playerY, speedY: 0,
             spriteIndex: 0, spriteSkipIndex: 0, playerMode: 0,
             downForce: 1,
         },
@@ -68,9 +68,10 @@ const init = () => {
         const maxY = canvas.height - playerSpriteSize;
         const newY = R.clamp(0, maxY, newYdraft);
         const playerIsOnGround = isPlayerOnGround(player);
-        const newSpeedY = playerIsOnGround ? 0 : player.speedY + player.downForce;
+        const newSpeedY = playerIsOnGround && player.speedY > 0 ? 0 : player.speedY + player.downForce;
         const tmpState = R.assocPath(['player', 'speedY'], newSpeedY, state);
-        return R.assocPath(['player', 'y'], newY, tmpState);
+        const tmpState2 = R.assocPath(['player', 'y'], newY, tmpState);
+        return tmpState2;
     };
     const updatePlayerSpeedX = state =>
         R.assocPath(['player', 'speedX'], mutableKeys.right ? 5 : mutableKeys.left ? -5 : 0, state);
@@ -92,9 +93,12 @@ const init = () => {
         updatePlayerSprite);
     // const updateEnemy = state => state;    
     const updateAndDraw = R.compose(update, draw);
+    // let count = 2;
     const gameLoop = state => {
         const newState = updateAndDraw(state);
+        // if (count > 0) 
         requestAnimationFrame(() => gameLoop(newState));
+        // count--;
     };
     gameLoop(initialState);
 }
