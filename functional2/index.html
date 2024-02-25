@@ -23,7 +23,7 @@
         function init() {
             const canvas = document.getElementById('gameCanvas');
             const ctx = canvas.getContext('2d');
-            const metadata = initMetadata(800, 720, 200, 80, 2400);
+            const metadata = initMetadata(800, 720, 200, 80, 60, 2400);
             canvas.width = metadata.gameWidth;
             canvas.height = metadata.gameHeight;
             const keys = { right: false, left: false, up: false };
@@ -61,9 +61,10 @@
 
         }
 
-        function initMetadata(gameWidth, gameHeight, playerSpriteSize, enemySpriteWidth, backgroundWidth) {
+        function initMetadata(gameWidth, gameHeight, playerSpriteSize, enemySpriteWidth, enemySpriteHeight, backgroundWidth) {
             const playerY = gameHeight - playerSpriteSize;
-            return { gameWidth, gameHeight, playerSpriteSize, backgroundWidth, playerY };
+            const enemyY = gameHeight - enemySpriteHeight;
+            return { gameWidth, gameHeight, playerSpriteSize, backgroundWidth, playerY, enemyY };
         }
 
         function initState(metadata) {
@@ -75,7 +76,7 @@
                     spriteIndex: 0, spriteSkipIndex: 0, playerMode: 0,
                     downForce: 1,
                 },
-                enemy: { x: 0, speedX: -1, speedY: 0, spriteIndex: 0 },
+                enemy: { x: 110, y: metadata.enemyY, speedX: -1, speedY: 0, spriteIndex: 0 },
             };
         }
     </script>
