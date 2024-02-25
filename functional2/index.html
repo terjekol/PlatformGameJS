@@ -7,8 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JavaScript platform game</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ramda/0.29.1/ramda.min.js"
-    integrity="sha512-PVSAmDFNqey8GMII8s9rjjkCFvUgzfsfi8FCRxQa3TkPZfdjCIUM+6eAcHIFrLfW5CTFAwAYS4pzl7FFC/KE7Q=="
-    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        integrity="sha512-PVSAmDFNqey8GMII8s9rjjkCFvUgzfsfi8FCRxQa3TkPZfdjCIUM+6eAcHIFrLfW5CTFAwAYS4pzl7FFC/KE7Q=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="./js/pure.js"></script>
     <link rel="stylesheet" href="../styles.css" />
 </head>
@@ -45,11 +45,19 @@
             const initialState = initState(metadata);
             const gameLoop = state => {
                 ctx.clearRect(0, 0, metadata.gameWidth, metadata.gameHeight);
-                const params = {state, metadata, keys};
+                const params = { state, metadata, keys };
                 const drawActions = getDrawActions(params);
                 for (let drawAction of drawActions) {
                     const image = images[drawAction.image];
-                    ctx.drawImage(image, drawAction.x, drawAction.y);
+                    if (drawAction.hasOwnProperty('frameX')) {
+                        ctx.drawImage(image, drawAction.frameX, drawAction.frameY,
+                            metadata.playerSpriteSize, metadata.playerSpriteSize,
+                            drawAction.x, drawAction.y,
+                            metadata.playerSpriteSize, metadata.playerSpriteSize,
+                        );
+                    } else {
+                        ctx.drawImage(image, drawAction.x, drawAction.y);
+                    }
                 }
                 const returnValue = update(params);
                 const newState = returnValue.state;

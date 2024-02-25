@@ -10,14 +10,16 @@
 // const drawPlayer = drawSprite(images.player, playerSpriteSize, playerSpriteSize, R.__, R.__, R.__, R.__);
 const getDrawActions = params => {
     const background = params.state.background;
+    const player = params.state.player;
+    const playerSize = params.metadata.playerSpriteSize;
+    const frameX = player.spriteIndex * playerSize;
+    const frameY = player.playerMode * playerSize;
     return [
         { image: 'background', x: background.x, y: 0 },
         { image: 'background', x: background.x + params.metadata.backgroundWidth - 1, y: 0 },
+        { image: 'player', x: player.x, y: player.y, frameX, frameY },
     ];
-    // drawBackground(state.background.x);
-    // drawBackground(state.background.x + images.background.width - 1);
     // drawPlayer(state.player.x, state.player.y, state.player.spriteIndex, 0);
-    // return state;
 };
 const updateBackground = params => {
     const background = params.state.background;
