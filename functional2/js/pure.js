@@ -1,7 +1,11 @@
-const createDrawAction = (image, x, y, mode, spriteIndex, width, height) => {
-    if (mode === undefined) return { image, x, y };
-    const frameX = spriteIndex * width;
-    const frameY = mode * height;
+const drawAction = (image, obj, deltaX, meta) => {
+    const x = obj.x + (deltaX ?? 0);
+    const y = obj.y;
+    if (meta === undefined) return { image, x, y };
+    const width = meta.width;
+    const height = meta.height;
+    const frameX = obj.spriteIndex * width;
+    const frameY = (obj.mode ?? 0) * height;
     return { image, x, y, frameX, frameY, width, height };
 }
 const getDrawActions = params => {
@@ -10,10 +14,10 @@ const getDrawActions = params => {
     const player = params.state.player;
     const enemy = params.state.enemy;
     return [
-        createDrawAction('background', back.x, 0),
-        createDrawAction('background', back.x + meta.background.width - 1, 0),
-        createDrawAction('player', player.x, player.y, player.mode, player.spriteIndex, meta.player.width, meta.player.height),
-        createDrawAction('enemy', enemy.x, enemy.y, 0, enemy.spriteIndex, meta.enemy.width, meta.enemy.height),
+        drawAction('background', back),
+        drawAction('background', back, meta.background.width - 1),
+        drawAction('player', player, 0, meta.player),
+        drawAction('enemy', enemy, 0, meta.enemy),
     ];
 };
 const updateBackground = params => {

@@ -42,6 +42,8 @@
                 ctx.clearRect(0, 0, metadata.gameWidth, metadata.gameHeight);
                 const params = { state, metadata, keys };
                 const drawActions = getDrawActions(params);
+                console.table(drawActions);
+                return;
                 for (let drawAction of drawActions) {
                     const image = images[drawAction.image];
                     if (drawAction.hasOwnProperty('frameX')) {
