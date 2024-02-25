@@ -14,8 +14,8 @@ const getDrawActions = params => {
     return [
         drawAction('background', back),
         drawAction('background', back, meta.background.width - 1),
-        drawAction('player', params.state.player, 0, meta.player),
         drawAction('enemy', params.state.enemy, 0, meta.enemy),
+        drawAction('player', params.state.player, 0, meta.player),
     ];
 };
 const updateBackground = params => {
@@ -48,8 +48,10 @@ const updatePlayerSpeedY = params =>
     !(params.keys.up && isPlayerOnGround(params)) ? params : R.assocPath(['state', 'player', 'speedY'], -32, params);
 const updateSprite = R.curry((objName, params) => {
     const state = params.state[objName];
+    const meta = params.metadata[objName];
     if (state.spriteSkipIndex == 3) {
-        const tmp = R.assocPath(['state', objName, 'spriteIndex'], (state.spriteIndex + 1) % 7, params);
+        const spriteIndex = (state.spriteIndex + 1) % meta.spriteCounts[state.mode];
+        const tmp = R.assocPath(['state', objName, 'spriteIndex'], spriteIndex, params);
         return R.assocPath(['state', objName, 'spriteSkipIndex'], 0, tmp);
     } else {
         return R.assocPath(['state', objName, 'spriteSkipIndex'], state.spriteSkipIndex + 1, params);
