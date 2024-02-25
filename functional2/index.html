@@ -23,7 +23,7 @@
         function init() {
             const canvas = document.getElementById('gameCanvas');
             const ctx = canvas.getContext('2d');
-            const metadata = initMetadata(800, 720, 200, 80, 200, 2400);
+            const metadata = initMetadata(800, 720, 200, 80, 60, 2400);
             canvas.width = metadata.gameWidth;
             canvas.height = metadata.gameHeight;
             const keys = { right: false, left: false, up: false };
@@ -42,12 +42,15 @@
                 ctx.clearRect(0, 0, metadata.gameWidth, metadata.gameHeight);
                 const params = { state, metadata, keys };
                 const drawActions = getDrawActions(params);
+                console.table(drawActions);
                 for (let drawAction of drawActions) {
                     const image = images[drawAction.image];
                     if (drawAction.hasOwnProperty('frameX')) {
                         const size = metadata.playerSpriteSize;
                         ctx.drawImage(image, drawAction.frameX, drawAction.frameY,
-                            size, size, drawAction.x, drawAction.y, size, size
+                            drawAction.width, drawAction.height,
+                            drawAction.x, drawAction.y,
+                            drawAction.width, drawAction.height,
                         );
                     } else {
                         ctx.drawImage(image, drawAction.x, drawAction.y);
@@ -64,7 +67,7 @@
         function initMetadata(gameWidth, gameHeight, playerSpriteSize, enemySpriteWidth, enemySpriteHeight, backgroundWidth) {
             const playerY = gameHeight - playerSpriteSize;
             const enemyY = gameHeight - enemySpriteHeight;
-            return { gameWidth, gameHeight, playerSpriteSize, backgroundWidth, playerY, enemyY };
+            return { gameWidth, gameHeight, playerSpriteSize, enemySpriteWidth, enemySpriteHeight, backgroundWidth, playerY, enemyY };
         }
 
         function initState(metadata) {
@@ -76,7 +79,7 @@
                     spriteIndex: 0, spriteSkipIndex: 0, mode: 0,
                     downForce: 1,
                 },
-                enemy: { x: 400, y: metadata.enemyY, speedX: -1, speedY: 0, spriteIndex: 0 },
+                enemy: { x: 0, y: metadata.enemyY, speedX: -1, speedY: 0, spriteIndex: 0 },
             };
         }
     </script>

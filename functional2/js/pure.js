@@ -1,8 +1,8 @@
-const createDrawAction = (image, x, y, mode, spriteIndex, size) => {
+const createDrawAction = (image, x, y, mode, spriteIndex, width, height) => {
     if (mode === undefined) return { image, x, y };
-    const frameX = spriteIndex * size;
-    const frameY = mode * size;
-    return { image, x, y, frameX, frameY };
+    const frameX = spriteIndex * width;
+    const frameY = mode * height;
+    return { image, x, y, frameX, frameY, width, height};
 }
 const getDrawActions = params => {
     const background = params.state.background;
@@ -10,12 +10,13 @@ const getDrawActions = params => {
     const playerSize = params.metadata.playerSpriteSize;
     const enemy = params.state.enemy;
     const enemyWidth = params.metadata.enemySpriteWidth;
+    const enemyHeight = params.metadata.enemySpriteHeight;
     return [
         createDrawAction('background', background.x, 0),
         createDrawAction('background', background.x + params.metadata.backgroundWidth - 1, 0),
-        createDrawAction('player', player.x, player.y, player.mode, player.spriteIndex, playerSize),
-        createDrawAction('enemy', enemy.x, enemy.y, 0, enemy.spriteIndex, enemyWidth),
-    ];
+        createDrawAction('player', player.x, player.y, player.mode, player.spriteIndex, playerSize, playerSize),
+        createDrawAction('enemy', enemy.x, enemy.y, 0, enemy.spriteIndex, enemyWidth, enemyHeight),
+    ];    
 };
 const updateBackground = params => {
     const background = params.state.background;
