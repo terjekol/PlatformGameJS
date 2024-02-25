@@ -6,28 +6,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JavaScript platform game</title>
-    <script src="./js/pure.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ramda/0.29.1/ramda.min.js"
-        integrity="sha512-PVSAmDFNqey8GMII8s9rjjkCFvUgzfsfi8FCRxQa3TkPZfdjCIUM+6eAcHIFrLfW5CTFAwAYS4pzl7FFC/KE7Q=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <style>
-        body {
-            background: black;
-        }
-
-        #gameCanvas {
-            background: blue;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            border: 5px solid white;
-        }
-
-        img {
-            display: none;
-        }
-    </style>
+    integrity="sha512-PVSAmDFNqey8GMII8s9rjjkCFvUgzfsfi8FCRxQa3TkPZfdjCIUM+6eAcHIFrLfW5CTFAwAYS4pzl7FFC/KE7Q=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="./js/pure.js"></script>
+    <link rel="stylesheet" href="../styles.css" />
 </head>
 
 <body onload="init()">
@@ -40,13 +23,9 @@
         function init() {
             const canvas = document.getElementById('gameCanvas');
             const ctx = canvas.getContext('2d');
-            const metadata = {
-                gameWidth: 800,
-                gameHeight: 720,
-                playerSpriteSize: 200,
-                backgroundWidth: 2400,
-            }
-            metadata.playerY = metadata.gameHeight - metadata.playerSpriteSize;
+            const metadata = initMetadata(800, 720, 200, 2400);
+            canvas.width = metadata.gameWidth;
+            canvas.height = metadata.gameHeight;
             const keys = {
                 right: false,
                 left: false,
@@ -60,14 +39,42 @@
             };
             window.addEventListener('keydown', handleKey);
             window.addEventListener('keyup', handleKey);
-
+            const getImage = name => document.getElementById(name + 'Img');
+            const images = ['background', 'player', 'enemy']
+                .reduce((obj, name) => R.assoc(name, getImage(name), obj), {});
+            const initialState = initState(metadata);
             const gameLoop = state => {
-                draw(state, metadata);
-                const newState = update(state, metadata, keys);
+                ctx.clearRect(0, 0, metadata.gameWidth, metadata.gameHeight);
+                const params = {state, metadata, keys};
+                const drawActions = getDrawActions(params);
+                for (let drawAction of drawActions) {
+                    const image = images[drawAction.image];
+                    ctx.drawImage(image, drawAction.x, drawAction.y);
+                }
+                const returnValue = update(params);
+                const newState = returnValue.state;
                 requestAnimationFrame(() => gameLoop(newState));
             };
             gameLoop(initialState);
 
+        }
+
+        function initMetadata(gameWidth, gameHeight, playerSpriteSize, backgroundWidth) {
+            const playerY = gameHeight - playerSpriteSize;
+            return { gameWidth, gameHeight, playerSpriteSize, backgroundWidth, playerY };
+        }
+
+        function initState(metadata) {
+            return {
+                background: { x: 0, speed: -2 },
+                player: {
+                    x: 0, speedX: 0,
+                    y: metadata.playerY, speedY: 0,
+                    spriteIndex: 0, spriteSkipIndex: 0, playerMode: 0,
+                    downForce: 1,
+                },
+                enemy: { x: 0, speedX: -1, speedY: 0, spriteIndex: 0 },
+            };
         }
     </script>
 
