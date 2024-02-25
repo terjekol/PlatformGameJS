@@ -35,7 +35,7 @@
                 const key = keyboardEvent.key;
                 if (!key.startsWith('Arrow')) return;
                 const fieldName = key.substring(5).toLowerCase();
-                key[fieldName] = keyboardEvent.type.endsWith('down');
+                keys[fieldName] = keyboardEvent.type.endsWith('down');
             };
             window.addEventListener('keydown', handleKey);
             window.addEventListener('keyup', handleKey);
@@ -50,10 +50,9 @@
                 for (let drawAction of drawActions) {
                     const image = images[drawAction.image];
                     if (drawAction.hasOwnProperty('frameX')) {
+                        const size = metadata.playerSpriteSize;
                         ctx.drawImage(image, drawAction.frameX, drawAction.frameY,
-                            metadata.playerSpriteSize, metadata.playerSpriteSize,
-                            drawAction.x, drawAction.y,
-                            metadata.playerSpriteSize, metadata.playerSpriteSize,
+                            size, size, drawAction.x, drawAction.y, size, size
                         );
                     } else {
                         ctx.drawImage(image, drawAction.x, drawAction.y);
