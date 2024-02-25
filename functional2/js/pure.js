@@ -30,6 +30,15 @@ const updatePlayerHorizontalMovement = params => {
     const newX = R.clamp(0, maxX, newXdraft);
     return R.assocPath(['state', 'player', 'x'], newX, params);
 };
+const updateEnemyHorizontalMovement = params => {
+    const meta = params.metadata;
+    const enemy = params.state.enemy;
+    const newX = enemy.x + enemy.speedX;
+    const hasLeftScreen = newX < -meta.enemy.width;
+    const x = hasLeftScreen ? meta.game.width : newX;
+    return R.assocPath(['state', 'enemy', 'x'], x, params);
+};
+
 const isPlayerOnGround = params => params.state.player.y >= params.metadata.player.y;
 const updatePlayerVerticalMovement = params => {
     const player = params.state.player;
@@ -62,4 +71,5 @@ const update = R.compose(
     updatePlayerSpeedX, updatePlayerSpeedY,
     updatePlayerHorizontalMovement, updatePlayerVerticalMovement,
     updateSprite('player'), updateSprite('enemy'),
+    updateEnemyHorizontalMovement,
 );

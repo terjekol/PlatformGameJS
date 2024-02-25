@@ -90,7 +90,7 @@
             return {
                 background: stateObj(0, 0, -2, 0),
                 player: stateObj(0, metadata.player.y, 0, 0, 0, 0, 0),
-                enemy: stateObj(0, metadata.enemy.y, -1, 0, 0, 0, 0),
+                enemy: stateObj(metadata.game.width, metadata.enemy.y, -1, 0, 0, 0, 0),
             };
         }
 
