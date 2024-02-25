@@ -19,7 +19,6 @@ const getDrawActions = params => {
         { image: 'background', x: background.x + params.metadata.backgroundWidth - 1, y: 0 },
         { image: 'player', x: player.x, y: player.y, frameX, frameY },
     ];
-    // drawPlayer(state.player.x, state.player.y, state.player.spriteIndex, 0);
 };
 const updateBackground = params => {
     const background = params.state.background;
@@ -49,18 +48,18 @@ const updateBackground = params => {
 //     R.assocPath(['player', 'speedX'], mutableKeys.right ? 5 : mutableKeys.left ? -5 : 0, state);
 // const updatePlayerSpeedY = state =>
 //     mutableKeys.up && isPlayerOnGround(state.player) ? R.assocPath(['player', 'speedY'], -32, state) : state;
-// const updatePlayerSprite = state => {
-//     const player = state.player;
-//     if (player.spriteSkipIndex == 3) {
-//         const tmpState = R.assocPath(['player', 'spriteIndex'], (player.spriteIndex + 1) % 7, state);
-//         return R.assocPath(['player', 'spriteSkipIndex'], 0, tmpState);
-//     } else {
-//         return R.assocPath(['player', 'spriteSkipIndex'], player.spriteSkipIndex + 1, state);
-//     }
-// }
+const updatePlayerSprite = params => {
+    const player = params.state.player;
+    if (player.spriteSkipIndex == 3) {
+        const tmp = R.assocPath(['state', 'player', 'spriteIndex'], (player.spriteIndex + 1) % 7, params);
+        return R.assocPath(['state', 'player', 'spriteSkipIndex'], 0, tmp);
+    } else {
+        return R.assocPath(['state', 'player', 'spriteSkipIndex'], player.spriteSkipIndex + 1, params);
+    }
+}
 const update = R.compose(
     updateBackground,
     // updatePlayerSpeedX, updatePlayerSpeedY,
     // updatePlayerHorizontalMovement, updatePlayerVerticalMovement,
-    // updatePlayerSprite
+    updatePlayerSprite
 );
