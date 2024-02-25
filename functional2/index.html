@@ -23,14 +23,10 @@
         function init() {
             const canvas = document.getElementById('gameCanvas');
             const ctx = canvas.getContext('2d');
-            const metadata = initMetadata(800, 720, 200, 2400);
+            const metadata = initMetadata(800, 720, 200, 80, 2400);
             canvas.width = metadata.gameWidth;
             canvas.height = metadata.gameHeight;
-            const keys = {
-                right: false,
-                left: false,
-                up: false,
-            };
+            const keys = { right: false, left: false, up: false };
             const handleKey = keyboardEvent => {
                 const key = keyboardEvent.key;
                 if (!key.startsWith('Arrow')) return;
@@ -39,9 +35,8 @@
             };
             window.addEventListener('keydown', handleKey);
             window.addEventListener('keyup', handleKey);
-            const getImage = name => document.getElementById(name + 'Img');
             const images = ['background', 'player', 'enemy']
-                .reduce((obj, name) => R.assoc(name, getImage(name), obj), {});
+                .reduce((obj, name) => R.assoc(name, document.getElementById(name + 'Img'), obj), {});
             const initialState = initState(metadata);
             const gameLoop = state => {
                 ctx.clearRect(0, 0, metadata.gameWidth, metadata.gameHeight);
@@ -66,7 +61,7 @@
 
         }
 
-        function initMetadata(gameWidth, gameHeight, playerSpriteSize, backgroundWidth) {
+        function initMetadata(gameWidth, gameHeight, playerSpriteSize, enemySpriteWidth, backgroundWidth) {
             const playerY = gameHeight - playerSpriteSize;
             return { gameWidth, gameHeight, playerSpriteSize, backgroundWidth, playerY };
         }

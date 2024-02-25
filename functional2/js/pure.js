@@ -1,23 +1,20 @@
-// const drawImage = R.curry(ctx.drawImage.bind(ctx));
-// const drawSprite = R.curry((image, width, height, x, y, spriteIndex, playerMode) => {
-//     const frameY = playerMode * height;
-//     const frameX = spriteIndex * width;
-//     ctx.drawImage(image, frameX, frameY,
-//         width, height, x, y,
-//         width, height);
-// });
-// const drawBackground = drawImage(images.background, R.__, 0);
-// const drawPlayer = drawSprite(images.player, playerSpriteSize, playerSpriteSize, R.__, R.__, R.__, R.__);
+const createDrawAction = (image, x, y, mode, spriteIndex, size) => {
+    if (mode === undefined) return { image, x, y };
+    const frameX = spriteIndex * size;
+    const frameY = mode * size;
+    return { image, x, y, frameX, frameY };
+}
 const getDrawActions = params => {
     const background = params.state.background;
     const player = params.state.player;
     const playerSize = params.metadata.playerSpriteSize;
-    const frameX = player.spriteIndex * playerSize;
-    const frameY = player.playerMode * playerSize;
+    const enemy = params.state.enemy;
+    const enemyWidth = params.metadata.enemySpriteWidth;
     return [
-        { image: 'background', x: background.x, y: 0 },
-        { image: 'background', x: background.x + params.metadata.backgroundWidth - 1, y: 0 },
-        { image: 'player', x: player.x, y: player.y, frameX, frameY },
+        createDrawAction('background', background.x, 0),
+        createDrawAction('background', background.x + params.metadata.backgroundWidth - 1, 0),
+        createDrawAction('player', player.x, player.y, player.playerMode, player.spriteIndex, playerSize),
+        createDrawAction('enemy', enemy.x, enemy.y, 0, enemy.spriteIndex, enemyWidth),
     ];
 };
 const updateBackground = params => {
@@ -46,7 +43,7 @@ const updatePlayerVerticalMovement = params => {
 const updatePlayerSpeedX = params =>
     R.assocPath(['state', 'player', 'speedX'], params.keys.right ? 5 : params.keys.left ? -5 : 0, params);
 const updatePlayerSpeedY = params =>
-    !(params.keys.up && isPlayerOnGround(params)) ? params : R.assocPath(['state','player', 'speedY'], -32, params);
+    !(params.keys.up && isPlayerOnGround(params)) ? params : R.assocPath(['state', 'player', 'speedY'], -32, params);
 const updatePlayerSprite = params => {
     const player = params.state.player;
     if (player.spriteSkipIndex == 3) {
@@ -56,11 +53,4 @@ const updatePlayerSprite = params => {
         return R.assocPath(['state', 'player', 'spriteSkipIndex'], player.spriteSkipIndex + 1, params);
     }
 }
-const update = R.compose(
-    updateBackground,
-    updatePlayerSpeedX,
-    updatePlayerSpeedY,
-    updatePlayerHorizontalMovement,
-    updatePlayerVerticalMovement,
-    updatePlayerSprite,
-);
+const update = R.compose(updateBackground, updatePlayerSpeedX, updatePlayerSpeedY, updatePlayerHorizontalMovement, updatePlayerVerticalMovement, updatePlayerSprite);
