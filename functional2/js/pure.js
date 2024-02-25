@@ -25,29 +25,28 @@ const updateBackground = params => {
     const value = (background.x + background.speed) % params.metadata.backgroundWidth;
     return R.assocPath(['state', 'background', 'x'], value, params);
 }
-// const updatePlayerHorizontalMovement = state => {
-//     const player = state.player;
-//     const newXdraft = player.x + player.speedX;
-//     const maxX = canvas.width - playerSpriteSize;
-//     const newX = R.clamp(0, maxX, newXdraft);
-//     return R.assocPath(['player', 'x'], newX, state);
-// };
-// const isPlayerOnGround = state => state.y >= playerY;
-// const updatePlayerVerticalMovement = state => {
-//     const player = state.player;
-//     const newYdraft = player.y + player.speedY;
-//     const maxY = canvas.height - playerSpriteSize;
-//     const newY = R.clamp(0, maxY, newYdraft);
-//     const playerIsOnGround = isPlayerOnGround(player);
-//     const newSpeedY = playerIsOnGround && player.speedY > 0 ? 0 : player.speedY + player.downForce;
-//     const tmpState = R.assocPath(['player', 'speedY'], newSpeedY, state);
-//     const tmpState2 = R.assocPath(['player', 'y'], newY, tmpState);
-//     return tmpState2;
-// };
-// const updatePlayerSpeedX = state =>
-//     R.assocPath(['player', 'speedX'], mutableKeys.right ? 5 : mutableKeys.left ? -5 : 0, state);
-// const updatePlayerSpeedY = state =>
-//     mutableKeys.up && isPlayerOnGround(state.player) ? R.assocPath(['player', 'speedY'], -32, state) : state;
+const updatePlayerHorizontalMovement = params => {
+    const player = params.state.player;
+    const newXdraft = player.x + player.speedX;
+    const maxX = params.metadata.gameWidth - params.metadata.playerSpriteSize;
+    const newX = R.clamp(0, maxX, newXdraft);
+    return R.assocPath(['state', 'player', 'x'], newX, params);
+};
+const isPlayerOnGround = params => params.state.player.y >= params.metadata.playerY;
+const updatePlayerVerticalMovement = params => {
+    const player = params.state.player;
+    const newYdraft = player.y + player.speedY;
+    const maxY = params.metadata.gameHeight - params.metadata.playerSpriteSize;
+    const newY = R.clamp(0, maxY, newYdraft);
+    const playerIsOnGround = isPlayerOnGround(params);
+    const newSpeedY = playerIsOnGround && player.speedY > 0 ? 0 : player.speedY + player.downForce;
+    const tmp = R.assocPath(['state', 'player', 'speedY'], newSpeedY, params);
+    return R.assocPath(['state', 'player', 'y'], newY, tmp);
+};
+const updatePlayerSpeedX = params =>
+    R.assocPath(['state', 'player', 'speedX'], params.keys.right ? 5 : params.keys.left ? -5 : 0, params);
+const updatePlayerSpeedY = params =>
+    !(params.keys.up && isPlayerOnGround(params)) ? params : R.assocPath(['state','player', 'speedY'], -32, params);
 const updatePlayerSprite = params => {
     const player = params.state.player;
     if (player.spriteSkipIndex == 3) {
@@ -59,7 +58,9 @@ const updatePlayerSprite = params => {
 }
 const update = R.compose(
     updateBackground,
-    // updatePlayerSpeedX, updatePlayerSpeedY,
-    // updatePlayerHorizontalMovement, updatePlayerVerticalMovement,
-    updatePlayerSprite
+    updatePlayerSpeedX,
+    updatePlayerSpeedY,
+    updatePlayerHorizontalMovement,
+    updatePlayerVerticalMovement,
+    updatePlayerSprite,
 );
