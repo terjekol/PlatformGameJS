@@ -35,15 +35,13 @@
             };
             window.addEventListener('keydown', handleKey);
             window.addEventListener('keyup', handleKey);
-            const images = ['background', 'player', 'enemy']
-                .reduce((obj, name) => R.assoc(name, document.getElementById(name + 'Img'), obj), {});
+            const imageInFieldFromName = (obj, name) => R.assoc(name, document.getElementById(name + 'Img'), obj);
+            const images = ['background', 'player', 'enemy'].reduce(imageInFieldFromName, {});
             const initialState = initState(metadata);
             const gameLoop = state => {
                 ctx.clearRect(0, 0, metadata.game.width, metadata.game.height);
                 const params = { state, metadata, keys };
                 const drawActions = getDrawActions(params);
-                console.table(drawActions);
-                return;
                 for (let drawAction of drawActions) {
                     const image = images[drawAction.image];
                     if (drawAction.hasOwnProperty('frameX')) {
@@ -91,8 +89,8 @@
         function initState(metadata) {
             return {
                 background: stateObj(0, 0, -2, 0),
-                player: stateObj(0, metadata.player.y, 0, 0, 0, 0, 0 ),
-                enemy: stateObj(0, metadata.enemy.y, -1, 0, 0, 0, 0 ),
+                player: stateObj(0, metadata.player.y, 0, 0, 0, 0, 0),
+                enemy: stateObj(0, metadata.enemy.y, -1, 0, 0, 0, 0),
             };
         }
 
