@@ -36,9 +36,10 @@ const updateEnemyHorizontalMovement = params => {
     const newX = enemy.x + enemy.speedX;
     const hasLeftScreen = newX < -meta.enemy.width;
     const x = hasLeftScreen ? meta.game.width : newX;
-    return R.assocPath(['state', 'enemy', 'x'], x, params);
+    const newState = R.assocPath(['state', 'enemy', 'x'], x, params);
+    if(!hasLeftScreen)return newState;
+    return R.assocPath(['state', 'enemy', 'speedX'], enemy.speedX - 0.5, params);
 };
-
 const isPlayerOnGround = params => params.state.player.y >= params.metadata.player.y;
 const updatePlayerVerticalMovement = params => {
     const player = params.state.player;
