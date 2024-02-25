@@ -11,18 +11,16 @@ const drawAction = (image, obj, deltaX, meta) => {
 const getDrawActions = params => {
     const meta = params.metadata;
     const back = params.state.background;
-    const player = params.state.player;
-    const enemy = params.state.enemy;
     return [
         drawAction('background', back),
         drawAction('background', back, meta.background.width - 1),
-        drawAction('player', player, 0, meta.player),
-        drawAction('enemy', enemy, 0, meta.enemy),
+        drawAction('player', params.state.player, 0, meta.player),
+        drawAction('enemy', params.state.enemy, 0, meta.enemy),
     ];
 };
 const updateBackground = params => {
     const background = params.state.background;
-    const value = (background.x + background.speed) % params.metadata.background.width;
+    const value = (background.x + background.speedX) % params.metadata.background.width;
     return R.assocPath(['state', 'background', 'x'], value, params);
 }
 const updatePlayerHorizontalMovement = params => {
@@ -36,10 +34,11 @@ const isPlayerOnGround = params => params.state.player.y >= params.metadata.play
 const updatePlayerVerticalMovement = params => {
     const player = params.state.player;
     const newYdraft = player.y + player.speedY;
-    const maxY = params.metadata.game.height - params.metadata.player.spriteHeight;
+    const meta = params.metadata;
+    const maxY = meta.game.height - meta.player.spriteHeight;
     const newY = R.clamp(0, maxY, newYdraft);
     const playerIsOnGround = isPlayerOnGround(params);
-    const newSpeedY = playerIsOnGround && player.speedY > 0 ? 0 : player.speedY + player.downForce;
+    const newSpeedY = playerIsOnGround && player.speedY > 0 ? 0 : player.speedY + meta.game.downForce;
     const tmp = R.assocPath(['state', 'player', 'speedY'], newSpeedY, params);
     return R.assocPath(['state', 'player', 'y'], newY, tmp);
 };
