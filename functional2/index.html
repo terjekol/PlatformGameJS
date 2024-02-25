@@ -23,7 +23,7 @@
         function init() {
             const canvas = document.getElementById('gameCanvas');
             const ctx = canvas.getContext('2d');
-            const metadata = initMetadata(800, 720, 200, 80, 60, 2400);
+            const metadata = initMetadata(800, 720, 200, 80, 200, 2400);
             canvas.width = metadata.gameWidth;
             canvas.height = metadata.gameHeight;
             const keys = { right: false, left: false, up: false };
@@ -73,10 +73,10 @@
                 player: {
                     x: 0, speedX: 0,
                     y: metadata.playerY, speedY: 0,
-                    spriteIndex: 0, spriteSkipIndex: 0, playerMode: 0,
+                    spriteIndex: 0, spriteSkipIndex: 0, mode: 0,
                     downForce: 1,
                 },
-                enemy: { x: 110, y: metadata.enemyY, speedX: -1, speedY: 0, spriteIndex: 0 },
+                enemy: { x: 400, y: metadata.enemyY, speedX: -1, speedY: 0, spriteIndex: 0 },
             };
         }
     </script>

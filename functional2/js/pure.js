@@ -13,7 +13,7 @@ const getDrawActions = params => {
     return [
         createDrawAction('background', background.x, 0),
         createDrawAction('background', background.x + params.metadata.backgroundWidth - 1, 0),
-        createDrawAction('player', player.x, player.y, player.playerMode, player.spriteIndex, playerSize),
+        createDrawAction('player', player.x, player.y, player.mode, player.spriteIndex, playerSize),
         createDrawAction('enemy', enemy.x, enemy.y, 0, enemy.spriteIndex, enemyWidth),
     ];
 };
