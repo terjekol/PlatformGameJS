@@ -48,14 +48,25 @@ const updatePlayerVerticalMovement = params => {
     const maxY = meta.game.height - meta.player.spriteHeight;
     const newY = R.clamp(0, maxY, newYdraft);
     const playerIsOnGround = isPlayerOnGround(params);
-    const newSpeedY = playerIsOnGround && meta.player.y > 0 ? 0 : player.speedY + meta.game.downForce;
+    const newSpeedY = playerIsOnGround && meta.player.y > 0 ? 0 : player.speedY + meta.game.downforce;
     const tmp = R.assocPath(['state', 'player', 'speedY'], newSpeedY, params);
     return R.assocPath(['state', 'player', 'y'], newY, tmp);
 };
 const updatePlayerSpeedX = params =>
     R.assocPath(['state', 'player', 'speedX'], params.keys.right ? 5 : params.keys.left ? -5 : 0, params);
-const updatePlayerSpeedY = params =>
+const updatePlayerSpeedY = params => 
     !(params.keys.up && isPlayerOnGround(params)) ? params : R.assocPath(['state', 'player', 'speedY'], -32, params);
+/*
+let lastY = null;
+const updatePlayerSpeedY = params => {
+    const obj = !(params.keys.up && isPlayerOnGround(params)) ? params : R.assocPath(['state', 'player', 'speedY'], -32, params);
+    if (obj.state.player.y != lastY) {
+        console.log(obj.state.player);
+        lastY = obj.state.player.y;
+    }
+    return obj;
+}
+*/    
 const updateSprite = R.curry((objName, params) => {
     const state = params.state[objName];
     const meta = params.metadata[objName];
