@@ -45,8 +45,8 @@ const updatePlayerVerticalMovement = params => {
     const player = params.state.player;
     const newYdraft = player.y + player.speedY;
     const meta = params.metadata;
-    const maxY = meta.game.height - meta.player.spriteHeight;
-    const newY = newYdraft;// R.clamp(0, maxY, newYdraft);
+    const maxY = meta.player.y;
+    const newY = R.clamp(0, maxY, newYdraft);
     const playerIsOnGround = isPlayerOnGround(params);
     const newSpeedY = playerIsOnGround && player.speedY >= 0 ? 0 : player.speedY + meta.game.downforce;
     // if (newSpeedY != player.speedY) console.log(newSpeedY, player.speedY);
