@@ -48,7 +48,7 @@ const updatePlayerVerticalMovement = params => {
     const maxY = meta.game.height - meta.player.spriteHeight;
     const newY = R.clamp(0, maxY, newYdraft);
     const playerIsOnGround = isPlayerOnGround(params);
-    const newSpeedY = playerIsOnGround && player.speedY > 0 ? 0 : player.speedY + meta.game.downforce;
+    const newSpeedY = playerIsOnGround && player.speedY >= 0 ? 0 : player.speedY + meta.game.downforce;
     // if (newSpeedY != player.speedY) console.log(newSpeedY, player.speedY);
     const tmp = R.assocPath(['state', 'player', 'speedY'], newSpeedY, params);
     return R.assocPath(['state', 'player', 'y'], newY, tmp);
