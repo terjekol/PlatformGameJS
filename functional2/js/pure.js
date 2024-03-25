@@ -16,6 +16,7 @@ const getDrawActions = params => {
         drawAction('background', back, meta.background.width - 1),
         drawAction('enemy', params.state.enemy, 0, meta.enemy),
         drawAction('player', params.state.player, 0, meta.player),
+        {text: 'Score: ' + Math.floor(params.state.score)},
     ];
 };
 const updateBackground = params => {
