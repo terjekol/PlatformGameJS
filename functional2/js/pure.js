@@ -16,7 +16,7 @@ const getDrawActions = params => {
         drawAction('background', back, meta.background.width - 1),
         drawAction('enemy', params.state.enemy, 0, meta.enemy),
         drawAction('player', params.state.player, 0, meta.player),
-        {text: 'Score: ' + Math.floor(params.state.score)},
+        { text: 'Score: ' + Math.floor(params.state.score) },
     ];
 };
 const updateBackground = params => {
@@ -87,11 +87,13 @@ const checkForCollision = params => {
     const noCollision = isAboveEnemy || isBelowEnemy || isToTheLeftOfEnemy || isToTheRightOfEnemy;
     return R.assocPath(['state', 'isRunning'], noCollision, params);
 };
+const updateScore = params => R.assocPath(['state', 'score'], params.state.score + 0.03, params);
 const update = R.compose(
     updateBackground,
     updatePlayerHorizontalMovement, updatePlayerVerticalMovement,
     updatePlayerSpeedX, updatePlayerSpeedY,
     updateSprite('player'), updateSprite('enemy'),
     updateEnemyHorizontalMovement,
-    checkForCollision
+    updateScore,
+    checkForCollision,
 );

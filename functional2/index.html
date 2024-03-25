@@ -33,6 +33,7 @@
                 const fieldName = key.substring(5).toLowerCase();
                 const isDown = keyboardEvent.type.endsWith('down');
                 keys[fieldName] = isDown;
+                keyboardEvent.preventDefault();
             };
             window.addEventListener('keydown', handleKey);
             window.addEventListener('keyup', handleKey);
