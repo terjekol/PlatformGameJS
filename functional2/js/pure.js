@@ -9,7 +9,7 @@ const drawAction = (image, obj, deltaX, meta) => {
     return { image, x, y, frameX, frameY, width, height };
 }
 const getDrawActions = params => {
-    const meta = params.metadata;
+    const meta = params.meta;
     const back = params.state.background;
     return [
         drawAction('background', back),
@@ -20,18 +20,18 @@ const getDrawActions = params => {
 };
 const updateBackground = params => {
     const background = params.state.background;
-    const value = (background.x + background.speedX) % params.metadata.background.width;
+    const value = (background.x + background.speedX) % params.meta.background.width;
     return R.assocPath(['state', 'background', 'x'], value, params);
 }
 const updatePlayerHorizontalMovement = params => {
     const player = params.state.player;
     const newXdraft = player.x + player.speedX;
-    const maxX = params.metadata.gameWidth - params.metadata.player.spriteWidth;
+    const maxX = params.meta.gameWidth - params.meta.player.spriteWidth;
     const newX = R.clamp(0, maxX, newXdraft);
     return R.assocPath(['state', 'player', 'x'], newX, params);
 };
 const updateEnemyHorizontalMovement = params => {
-    const meta = params.metadata;
+    const meta = params.meta;
     const enemy = params.state.enemy;
     const newX = enemy.x + enemy.speedX;
     const hasLeftScreen = newX < -meta.enemy.width;
@@ -40,11 +40,11 @@ const updateEnemyHorizontalMovement = params => {
     if (!hasLeftScreen) return newState;
     return R.assocPath(['state', 'enemy', 'speedX'], enemy.speedX - 0.5, newState);
 };
-const isPlayerOnGround = params => params.state.player.y >= params.metadata.player.y;
+const isPlayerOnGround = params => params.state.player.y >= params.meta.player.y;
 const updatePlayerVerticalMovement = params => {
     const player = params.state.player;
     const newYdraft = player.y + player.speedY;
-    const meta = params.metadata;
+    const meta = params.meta;
     const maxY = meta.player.y;
     const newY = R.clamp(0, maxY, newYdraft);
     const playerIsOnGround = isPlayerOnGround(params);
@@ -57,20 +57,9 @@ const updatePlayerSpeedX = params =>
     R.assocPath(['state', 'player', 'speedX'], params.keys.right ? 5 : params.keys.left ? -5 : 0, params);
 const updatePlayerSpeedY = params =>
     !(params.keys.up && isPlayerOnGround(params)) ? params : R.assocPath(['state', 'player', 'speedY'], -32, params);
-/*
-let lastY = null;
-const updatePlayerSpeedY = params => {
-    const obj = !(params.keys.up && isPlayerOnGround(params)) ? params : R.assocPath(['state', 'player', 'speedY'], -32, params);
-    if (obj.state.player.y != lastY) {
-        console.log(obj.state.player);
-        lastY = obj.state.player.y;
-    }
-    return obj;
-}
-*/
 const updateSprite = R.curry((objName, params) => {
     const state = params.state[objName];
-    const meta = params.metadata[objName];
+    const meta = params.meta[objName];
     if (state.spriteSkipIndex == 3) {
         const spriteIndex = (state.spriteIndex + 1) % meta.spriteCounts[state.mode];
         const tmp = R.assocPath(['state', objName, 'spriteIndex'], spriteIndex, params);
@@ -79,10 +68,29 @@ const updateSprite = R.curry((objName, params) => {
         return R.assocPath(['state', objName, 'spriteSkipIndex'], state.spriteSkipIndex + 1, params);
     }
 });
+const getEdge = (direction, entity, params) => {
+    const obj = params.state[entity];
+    const meta = params.meta[entity];
+    const margins = { left: 10, top: 20, right: 30, bottom: 20 };
+    return direction == 'left' ? obj.x + margins.left :
+        direction == 'right' ? obj.x + meta.width - margins.right :
+            direction == 'bottom' ? obj.y + meta.height - margins.bottom :
+        /* direction == 'top' ? */ obj.y + margins.top;
+}
+const checkForCollision = params => {
+    const isAboveEnemy = getEdge('bottom', 'player', params) < getEdge('top', 'enemy', params);
+    const isBelowEnemy = getEdge('top', 'player', params) > getEdge('bottom', 'enemy', params);
+    const isToTheRightOfEnemy = getEdge('left', 'player', params) > getEdge('right', 'enemy', params);
+    const isToTheLeftOfEnemy = getEdge('right', 'player', params) < getEdge('left', 'enemy', params);
+    // console.log(isAboveEnemy, isBelowEnemy, isToTheLeftOfEnemy, isToTheRightOfEnemy);
+    const noCollision = isAboveEnemy || isBelowEnemy || isToTheLeftOfEnemy || isToTheRightOfEnemy;
+    return R.assocPath(['state', 'isRunning'], noCollision, params);
+};
 const update = R.compose(
     updateBackground,
     updatePlayerHorizontalMovement, updatePlayerVerticalMovement,
     updatePlayerSpeedX, updatePlayerSpeedY,
     updateSprite('player'), updateSprite('enemy'),
     updateEnemyHorizontalMovement,
+    checkForCollision
 );
