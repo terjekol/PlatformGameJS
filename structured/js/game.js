@@ -9,7 +9,7 @@ function runGame() {
 
     drawPlayer(ctx, gameModel);
     const animate = () => {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        // ctx.clearRect(0, 0, canvas.width, canvas.height);
         updatePlayer(gameModel);
         updateEnemy(gameModel);
         updateBackground(gameModel);
