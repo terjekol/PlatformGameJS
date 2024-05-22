@@ -13,7 +13,7 @@ class Enemy extends Sprite {
             this.x = this.gameWidth;
             this.speedX -= 0.5;
         } else {
-            this.x = this.x + this.speedX;
+            this.x += this.speedX;
         }
     }
 }

@@ -10,13 +10,13 @@ class Background extends Sprite {
         this.x = this.x < -this.width
             ? 0
             : this.x + this.speedX;
-    }  
+    }
 
     draw() {
         super.draw();
         const backgroundImageEndX = this.x + this.width;
-        if(backgroundImageEndX < this.gameWidth){
+        if (backgroundImageEndX < this.gameWidth) {
             super.draw(this.width - 1);
         }
-    }      
+    }
 }
