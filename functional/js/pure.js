@@ -172,7 +172,7 @@ const updateSprite = (objectName, params) => {
     const objectState = params.state[objectName]
     const objectMeta = params.meta[objectName]
 
-    const shouldChangeFrame = objectState.spriteSkipIndex === 3
+    const shouldChangeFrame = objectState.spriteSkipIndex === 0
 
     const newObjectState = shouldChangeFrame
         ? {
@@ -180,11 +180,11 @@ const updateSprite = (objectName, params) => {
             spriteIndex:
                 (objectState.spriteIndex + 1) %
                 objectMeta.spriteCounts[objectState.mode],
-            spriteSkipIndex: 0,
+            spriteSkipIndex: params.meta.game.spriteAnimationSkip,
         }
         : {
             ...objectState,
-            spriteSkipIndex: objectState.spriteSkipIndex + 1,
+            spriteSkipIndex: objectState.spriteSkipIndex - 1,
         }
 
     return {
