@@ -4,12 +4,10 @@ function runGame() {
     const gameModel = initGameModel();
     canvas.width = gameModel.game.width;
     canvas.height = gameModel.game.height;
-    window.addEventListener('keydown', e => handleKey(true, e.key, gameModel));
-    window.addEventListener('keyup', e => handleKey(false, e.key, gameModel));
+    window.addEventListener('keydown', event => handleKey(true, event, gameModel));
+    window.addEventListener('keyup', event => handleKey(false, event, gameModel));
 
-    drawPlayer(ctx, gameModel);
     const animate = () => {
-        // ctx.clearRect(0, 0, canvas.width, canvas.height);
         updatePlayer(gameModel);
         updateEnemy(gameModel);
         updateBackground(gameModel);
@@ -51,7 +49,6 @@ function initGameModel() {
         },
         player: {
             x: 0,
-            // y: 0,
             width: 200,
             height: 200,
             speedX: 0,
@@ -63,7 +60,6 @@ function initGameModel() {
         },
         enemy: {
             x: 0,
-            // y: 0,
             width: 80,
             height: 60,
             speedX: -1,
