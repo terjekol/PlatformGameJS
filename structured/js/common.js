@@ -1,6 +1,6 @@
 function clamp(value, min, max) {
     return Math.min(Math.max(value, min), max);
-};
+}
 
 function drawSpriteFrame(ctx, image, objectModel) {
     const { x, y, width, height, spriteIndex, state } = objectModel;
