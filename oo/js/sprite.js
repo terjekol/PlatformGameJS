@@ -7,6 +7,7 @@ class Sprite {
         this.speedX = 0;
         this.speedY = 0;
         this.spriteIndex = 0;
+        this.spriteSkipIndex = 0;
         this.state = 0;
         this.spriteCounts = spriteCounts;
         this.spriteAnimationSkip = spriteAnimationSkip;
@@ -26,8 +27,7 @@ class Sprite {
         this.spriteIndex = (this.spriteIndex + 1) % spriteCount;
     }
 
-    draw(offsetX) {
-        if (!offsetX) offsetX = 0;
+    draw(offsetX = 0) {
         const frameY = this.state * this.height;
         const frameX = this.spriteIndex * this.width;
 
