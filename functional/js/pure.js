@@ -168,7 +168,7 @@ const updateEnemyHorizontalMovement = params => {
     }
 }
 
-const updateSprite = (objectName, params) => {
+const updateSprite = objectName => params => {
     const objectState = params.state[objectName]
     const objectMeta = params.meta[objectName]
 
@@ -196,11 +196,8 @@ const updateSprite = (objectName, params) => {
     }
 }
 
-const updatePlayerSprite = params =>
-    updateSprite('player', params)
-
-const updateEnemySprite = params =>
-    updateSprite('enemy', params)
+const updatePlayerSprite = updateSprite('player')
+const updateEnemySprite = updateSprite('enemy')
 
 const getEdge = (direction, entity, params) => {
     const objectState = params.state[entity]
