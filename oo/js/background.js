@@ -6,7 +6,6 @@ class Background extends Sprite {
     }
 
     update() {
-        super.update();
         this.x = this.x < -this.width
             ? 0
             : this.x + this.speedX;
