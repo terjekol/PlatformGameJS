@@ -18,10 +18,6 @@ class Game {
         window.addEventListener('keyup', keyUpHandler.handleKey.bind(keyUpHandler));
     }
 
-    getImage(name) {
-        return document.getElementById(name + 'Img');
-    }
-
     run() {
         this.ctx.clearRect(0, 0, this.width, this.height);
         this.background.update();
