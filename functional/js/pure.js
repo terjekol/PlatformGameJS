@@ -265,13 +265,13 @@ const updateScore = params => ({
 })
 
 const update = pipe(
-    updatePlayerSpeedX,
-    updatePlayerSpeedY,
     updatePlayerHorizontalMovement,
     updatePlayerVerticalMovement,
     updatePlayerSprite,
-    updateEnemyHorizontalMovement,
+    updatePlayerSpeedX,
+    updatePlayerSpeedY,
     updateEnemySprite,
+    updateEnemyHorizontalMovement,
     updateBackground,
     updateScore,
     checkForCollision
